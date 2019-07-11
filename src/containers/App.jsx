@@ -1,5 +1,5 @@
 //wrapper container for the entire react
-import React, {Component} from "react";
+import React, { Component } from "react";
 // import store from "../store";
 import MainContainer from "./mainContainer";
 import Menu from "../components/Menu.jsx"
@@ -19,44 +19,44 @@ const mapStateToProps = store => ({
   finishedFlag: store.graph.fetched,
   publicKey: store.login.awsPublicKey,
   privateKey: store.login.awsPrivateKey,
-  loginKey: true//store.login.loginKey
+  loginKey: store.login.loginKey
 })
 
 const mapDispatchToProps = dispatch => ({
   //get data on one single region
-    getAWSInstances: (instances) => {
-        dispatch(actions.getAWSInstances(instances));
-    },
-    //show details on specific nodes on click
-    getNodeDetails: (data) => {
-      dispatch(actions.getNodeDetails(data));
-    },
+  getAWSInstances: (instances) => {
+    dispatch(actions.getAWSInstances(instances));
+  },
+  //show details on specific nodes on click
+  getNodeDetails: (data) => {
+    dispatch(actions.getNodeDetails(data));
+  },
 
-    getAllRegions: (publicKey, privateKey) => {
-      dispatch(actions.getAllRegions(publicKey,privateKey));
-    },
-    //get credentials from folder on computer
-    getAWSKeys: (keys) => {
-      dispatch(actions.getAWSKeys(keys));
-    },
-    //login state 
-    logIn: () => {
-      dispatch(actions.logIn());
-    }
+  getAllRegions: (publicKey, privateKey) => {
+    dispatch(actions.getAllRegions(publicKey, privateKey));
+  },
+  //get credentials from folder on computer
+  getAWSKeys: (keys) => {
+    dispatch(actions.getAWSKeys(keys));
+  },
+  //login state 
+  logIn: () => {
+    dispatch(actions.logIn());
+  }
 })
 
-class App extends Component{
+class App extends Component {
 
-  render(){
+  render() {
     console.log(this.props);
     let display = [];
     display.push(<Menu publicKey={this.props.publicKey} privateKey={this.props.privateKey} getAWSInstances={this.props.getAWSInstances} currentRegion={this.props.currentRegion} getAllRegions={this.props.getAllRegions} />);
-    display.push(<MainContainer getAWSKeys={this.props.getAWSKeys} getAWSInstances={this.props.getAWSInstances} regionData={this.props.regionData} 
+    display.push(<MainContainer getAWSKeys={this.props.getAWSKeys} getAWSInstances={this.props.getAWSInstances} regionData={this.props.regionData}
       getNodeDetails={this.props.getNodeDetails} activeNode={this.props.activeNode} fetchingFlag={this.props.fetchingFlag} finishedFlag={this.props.finishedFlag}
-      edgeTable= {this.props.edgeTable}/>);
-    return(
+      edgeTable={this.props.edgeTable} />);
+    return (
       <div id="app">
-        {this.props.loginKey ? display : <Login loginKey={this.props.loginKey} logIn={this.props.logIn}/> }
+        {this.props.loginKey ? display : <Login loginKey={this.props.loginKey} logIn={this.props.logIn} />}
       </div>
     )
   }
