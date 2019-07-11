@@ -465,7 +465,7 @@ export const getAllRegions = (publicKey, privateKey) => {
         // this is because I restructored the object we received, you don't need to look for the describeInstance, awsECs[regions] is the describeInstance
           allRegionsPromisesArray.push(new Promise( (resolve, reject )=> {
             graphData.compileEC2Data(awsEC2[regions], regionString)
-            resolve();
+            .then(() => resolve());
           }));  
       }  
 
@@ -476,26 +476,24 @@ export const getAllRegions = (publicKey, privateKey) => {
         // ********ditto from line 441 
         allRegionsPromisesArray.push(new Promise( (resolve, reject )=> {
           graphData.compileRDSData(awsRDS[regions], regionString)
-          resolve();
+            .then(() => resolve());
         }));
       }
       
       Promise.all(allRegionsPromisesArray).then( () => {
-
-        // graphData.createEdges();
-        // const edgeTable = graphData.getEdgesData();
-        const edgeTable = [];
-      console.log('Heres the graph data for regions: ', edgeTable);
-      const regionState = graphData.getRegionData();
-      dispatch(getAWSInstancesFinished());
-      dispatch({
-        type: actionTypes.GET_AWS_INSTANCES,
-        payload: {
-          regionState,
-          edgeTable,
-          currentRegion: 'all',
-        },
-      });
+        graphData.createEdges();
+        const edgeTable = graphData.getEdgesData();
+        console.log('Heres the graph data for regions: ', edgeTable);
+        const regionState = graphData.getRegionData();
+        dispatch(getAWSInstancesFinished());
+        dispatch({
+          type: actionTypes.GET_AWS_INSTANCES,
+          payload: {
+            regionState,
+            edgeTable,
+            currentRegion: 'all',
+          },
+        });
       })
     })
   }
