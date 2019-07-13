@@ -1,6 +1,6 @@
 ![Alt text](/src/assets/logosmall.png?raw=true)
 
-# Mira
+# MiraCloud
 Mira is an organizational tool for AWS' frequently used services.
 
 <div style="margin: 0 auto; width: 720px;"><img src ="./src/assets/MiraOneRegion.gif" /></div>
@@ -46,6 +46,6 @@ Use the default region and default data output(JSON)
 <div style="margin: 0 auto; width: 720px;"><img src ="./src/assets/MiraEditSecurityGroups.png" /></div>
 
 ## Contributors
-[Emilia Brizuela-Nothaft](https://github.com/emiliacarmel) | [Melody Chai](https://github.com/melodychai) | [Byron Inocencio](https://github.com/jaybyron) | [Jonathan Mavandi](https://github.com/jmavandi)
+[Rachel Kim](https://github.com/rayykim) | [Victoria Adnet](https://github.com/adnetv) | [Tarlan Gardashov](https://github.com/TarlanG) | [Gilbert Ramirez](https://github.com/Gillysuit)
 
 
