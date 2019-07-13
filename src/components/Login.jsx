@@ -29,14 +29,15 @@ class Login extends Component{
         }))
     }
     render() {
-      console.log(this.state);
-      console.log(this.props.loginKey);
+      let fetching = <div id="welcome"><input type="image" src="../src/assets/mira3.png" alt="Mira Logo"></input></div>
       return (
           <div id="loginContainer">
-              <p id='Welcome'>Mira, Mira</p>
-              <input type='text' id='publicKey' placeholder='public access key' onChange={(e)=>{this.handleChange(e.target.value, 'publicKey')}}></input>
-              <input type='text' id='secretKey' placeholder='secret access key'onChange={(e)=>{this.handleChange(e.target.value, 'secretKey')}}></input>
-              <button onClick={(e)=>{this.handleSubmit(this.state.publicKey, this.state.secretKey)}}>login</button>
+              {fetching}
+              <div id='input_keys'>
+                <div id='login_keys'><h4>Public Key</h4><input type='text' id='accessKeys' onChange={(e)=>{this.handleChange(e.target.value, 'publicKey')}}></input></div>
+                <div id='login_keys'><h4>Secret Key</h4><input type='text' id='accessKeys' onChange={(e)=>{this.handleChange(e.target.value, 'secretKey')}}></input></div>
+                <button onClick={(e)=>{this.handleSubmit(this.state.publicKey, this.state.secretKey)}}>Login</button>
+              </div>
           </div>
       )
     }

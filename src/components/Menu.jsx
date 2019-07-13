@@ -71,15 +71,16 @@ class Menu extends Component {
 
     return (
       <div id="Menu">
+        <div id='top-menu'>
+          <img id='small_logo' src="../src/assets/mira3.png" />
+          <button id="logout" onClick={handleLogOut}>Log Out</button>
+        </div>
         {/* select component for html in react jsx */}
-        <Select
-          id='select-menu' 
-          value={this.state.selectedOption}
-          onChange={handleChange}
-          options={options}
-          />
-       <button id="refresh" onClick={refresh}>Refresh</button>
-       <button id="logOut" onClick={handleLogOut}>Log Out</button>
+        <div id='bottom-menu'>
+          <h4>Choose a region:</h4>
+          <Select id='select-menu' value={this.state.selectedOption} onChange={handleChange} options={options}/>
+          <button id="refresh" onClick={refresh}><img id="refreshimg" src="../src/assets/refresh.png"/></button> 
+        </div>
       </div>
     );
   }

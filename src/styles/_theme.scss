@@ -5,10 +5,10 @@
 //     url("fonts/Hack.woff") format("woff"),
 // }
 $font-family: "Trebuchet MS", Helvetica, sans-serif;
-$bg-color: rgb(27, 27, 27);
+$bg-color: darken(rgb(40, 40, 40), 5%);
 $bg-image: linear-gradient(60deg, #29323c 0%, #485563 100%);
-$graph-container-bg-color: lighten($bg-color, 3%);
-$border-color: darken($bg-color, 5%);
+$graph-container-bg-color: lighten($bg-color, 0%);
+$border-color: darken($bg-color, 0%);
 
 /* ------ MENU ------ */
 // background-image: 
