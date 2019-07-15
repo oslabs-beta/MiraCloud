@@ -19,18 +19,16 @@ class Security_Group_Edit extends Component {
   }
 
   getSgTotal() {
-    console.log(this.props.sgData);
+    console.log("this is sgData from getSgTotal", this.props.sgData);
     const { sgData } = this.props;
     const groupIds = [];
     for (let i = 0; i < sgData.length; i++) {
       groupIds.push(
-        <option
+        <input
           id="GroupId"
-          value={sgData[i].GroupId}
+          defaultValue={sgData[i].GroupId}
           ref={input => (this.GroupId = input)}
-        >
-          {sgData[i].GroupId}
-        </option>
+        />
       );
     }
     return groupIds;
@@ -96,16 +94,32 @@ class Security_Group_Edit extends Component {
         }
       ]
     };
+
     if (this.checkSource(this.source.value)) {
-      //need to check this case of a IP!!!!!!! or anywhere, still not ready
-      //checks if it is an IP address, saves it to CidrIp
       paramsIn.IpPermissions[0].IpRanges = [
         { CidrIp: this.source.value, Description: this.description.value }
       ];
-      paramsOut.IpPermissions[0].IpRanges = [
+      this.setState({
+        inbound: true,
+        outbound: false
+      });
+    } else if (this.checkSource(this.GroupId.value)) {
+      paramsIn.IpPermissions[0].IpRanges = [
         { CidrIp: this.GroupId.value, Description: this.description.value }
       ];
-    } else {
+      this.setState({
+        inbound: false,
+        outbound: true
+      });
+    }
+    //  if(this.checkSource(this.source.value)){
+    //    //need to check this case of a IP!!!!!!! or anywhere, still not ready
+    //    //checks if it is an IP address, saves it to CidrIp
+    //    paramsIn.IpPermissions[0].IpRanges = [{CidrIp:this.source.value, Description:this.description.value}]
+    //    paramsOut.IpPermissions[0].IpRanges = [{CidrIp:this.GroupId.value, Description:this.description.value}]
+
+    //  }
+    else {
       //if not IP then it is a security group id (sg-fdgriwerhcwke)
       paramsIn.IpPermissions[0].UserIdGroupPairs = [
         { GroupId: this.source.value, Description: this.description.value }
@@ -137,22 +151,107 @@ class Security_Group_Edit extends Component {
       });
     }
 
-    editSGPromisesIn()
-      .then(() => {
-        editSGPromisesOut();
-      })
-      .then(result => {
-        this.props.onRequestClose();
-        console.log("Got the result: " + result);
-      })
-      .catch(function(err) {
-        alert(err);
+    function revokeSGPromisesIn() {
+      return new Promise((resolve, reject) => {
+        ec2.revokeSecurityGroupIngress(paramsIn, function(err, data) {
+          if (err) {
+            console.log(err, err.stack);
+            reject(err);
+          } // an error occurred
+          resolve(); // successful response
+        });
       });
+    }
 
-    //  .then(this.props.onRequestClose() , reason => {
-    //    alert(reason);
-    //  });
-    event.preventDefault();
+    function revokeSGPromisesOut() {
+      return new Promise((resolve, reject) => {
+        ec2.revokeSecurityGroupEgress(paramsOut, function(err, data) {
+          if (err) {
+            console.log(err, err.stack);
+            reject(err);
+          } // an error occurred
+          resolve(); // successful response
+        });
+      });
+    }
+    if (!this.props.delete) {
+      if (this.state.inbound) {
+        editSGPromisesIn()
+          .then(result => {
+            this.props.onRequestClose();
+            console.log("Got the result: " + result);
+          })
+          .catch(function(err) {
+            alert(err);
+          });
+      } else if (this.state.outbound) {
+        editSGPromisesOut()
+          .then(() => {
+            this.props.onRequestClose();
+            // console.log('Got the result: ' + result);
+          })
+          .catch(function(err) {
+            alert(err);
+          });
+      } else {
+        // console.log('its here');
+        editSGPromisesIn()
+          .then(() => {
+            editSGPromisesOut();
+          })
+          .then(() => {
+            this.props.onRequestClose();
+            // console.log('Got the result: ' + result);
+          })
+          .catch(function(err) {
+            alert(err);
+          });
+      }
+
+      //  .then(this.props.onRequestClose() , reason => {
+      //    alert(reason);
+      //  });
+      event.preventDefault();
+    }
+    if (this.props.delete) {
+      if (this.state.inbound) {
+        revokeSGPromisesIn()
+          .then(result => {
+            this.props.onRequestClose();
+            console.log("Got the result: " + result);
+          })
+          .catch(function(err) {
+            alert(err);
+          });
+      } else if (this.state.outbound) {
+        revokeSGPromisesIn()
+          .then(() => {
+            this.props.onRequestClose();
+            // console.log('Got the result: ' + result);
+          })
+          .catch(function(err) {
+            alert(err);
+          });
+      } else {
+        // console.log('its here');
+        revokeSGPromisesIn()
+          .then(() => {
+            revokeSGPromisesOut();
+          })
+          .then(() => {
+            this.props.onRequestClose();
+            // console.log('Got the result: ' + result);
+          })
+          .catch(function(err) {
+            alert(err);
+          });
+      }
+
+      //  .then(this.props.onRequestClose() , reason => {
+      //    alert(reason);
+      //  });
+      event.preventDefault();
+    }
   }
 
   render() {
@@ -332,11 +431,14 @@ class Security_Group_Edit extends Component {
         </option>
       );
     }
-
     return (
       <div id="modal-table">
         <form onSubmit={this.handleSubmit}>
-          <h2> Edit Inbound and Outbound Security Groups</h2>
+          {!this.props.delete ? (
+            <h2> Edit Inbound and Outbound Security Groups</h2>
+          ) : (
+            <h2>Delete Security Rules</h2>
+          )}
           <table>
             <tr>
               <th>Inbound: </th>
@@ -346,8 +448,7 @@ class Security_Group_Edit extends Component {
             </tr>
             <tr>
               <th>
-                {/* <input id="Source" type="text" defaultValue={this.getSgTotal()} ref={(input) => this.selectInbound = input} /> */}
-                <select>{this.getSgTotal()}</select>
+                {this.getSgTotal()}
               </th>
               <th>
                 <h2>{"<-----"}</h2>
