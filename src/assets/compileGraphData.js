@@ -33,7 +33,8 @@ class compileGraphData {
     }
 
     compileRDSData(data, region) {
-        console.log('kfajskfjh DATA BRO', data)
+        return new Promise((originalResolve, originalReject) => {
+
         AWS.config.update({
             region,
         });
@@ -87,16 +88,18 @@ class compileGraphData {
             }))
         }
 
-        Promise.all(innerPromiseArray).then(() => {
-
-            // console.log("sgnodre correlations", this.sgNodeCorrelations);
-            // console.log("sgRelationshisps ", this.sgRelationships)
+        Promise.all(innerPromiseArray)
+            .then(() => {
+                originalResolve();
+            })
+            .catch(err => originalReject(err));
         });
     }
 
     compileEC2Data(data, region) {
-        AWS.config.update({
-            region,
+        return new Promise((originalResolve, originalReject) => {
+            AWS.config.update({
+                region,
         });
         this.ec2 = new AWS.EC2({});
         const innerPromiseArray = [];
@@ -147,10 +150,11 @@ class compileGraphData {
             }
         }
 
-        Promise.all(innerPromiseArray).then(() => {
-            // console.log("inner promise array ", innerPromiseArray);
-            // console.log("sgnodre correlations", this.sgNodeCorrelations);
-            // console.log("sgRelationshisps ", this.sgRelationships)
+        Promise.all(innerPromiseArray)
+            .then(() => {
+                originalResolve();    
+            })
+            .catch(err => originalReject(err));
         });  
     }
 
@@ -168,22 +172,36 @@ class compileGraphData {
         }
     }
 
+    // createEdges() {
+    //     console.log("sgnodre correlations", this.sgNodeCorrelations);
+    //     console.log("sgRelationshisps ", this.sgRelationships)
+    //     for (let i = 0; i < this.sgRelationships.length; i++) {
+    //         this.sgNodeCorrelations[this.sgRelationships[i][0]].forEach(function (val1, val2, set) {
+    //             this.sgNodeCorrelations[this.sgRelationships[i][1]].forEach(function (value1, value2, set2) {
+    //                 if (!this.edgeTable.hasOwnProperty(val1)) this.edgeTable[val1] = new Set();
+    //                 this.edgeTable[val1].add(value1);
+    //             })
+    //         })
+    //     }
 
+    //     console.log("the edge tables", this.edgeTable)
+    //     return this.edgeTable;
+    // }
 
-    createEdges() {
-        console.log("sgnodre correlations", this.sgNodeCorrelations);
-        console.log("sgRelationshisps ", this.sgRelationships)
-        for (let i = 0; i < this.sgRelationships.length; i++) {
-            this.sgNodeCorrelations[this.sgRelationships[i][0]].forEach(function (val1, val2, set) {
-                this.sgNodeCorrelations[this.sgRelationships[i][1]].forEach(function (value1, value2, set2) {
-                    if (!this.edgeTable.hasOwnProperty(val1)) this.edgeTable[val1] = new Set();
-                    this.edgeTable[val1].add(value1);
-                })
-            })
-        }
-
-        console.log("the edge tables", this.edgeTable)
-        return this.edgeTable;
+    createEdges(){
+        for(let i = 0; i < this.sgRelationships.length; i++){
+        const firstParam = Array.from( this.sgNodeCorrelations[this.sgRelationships[i][0]]);
+        const id = firstParam[0];
+        const secondParam = Array.from(this.sgNodeCorrelations[this.sgRelationships[i][1]]);
+        const sg = secondParam[0];
+         if(!this.edgeTable.hasOwnProperty(id)){ 
+           this.edgeTable[id]= new Set();
+       
+         }      
+         this.edgeTable[id].add(sg);
+       }
+       console.log("the edge tables",this.edgeTable) 
+       return this.edgeTable;
     }
 
     getRegionData() {
