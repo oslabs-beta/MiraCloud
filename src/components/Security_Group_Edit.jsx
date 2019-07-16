@@ -455,11 +455,7 @@ class Security_Group_Edit extends Component {
               </th>
               <th />
               <th>
-                <input
-                  id="Source"
-                  type="text"
-                  ref={input => (this.source = input)}
-                />
+                <input id="Source" type="text" ref={input => (this.source = input)}/>
                 <select>
                   <option value="Custom">Custom</option>
                   <option value="Anywhere">Anywhere</option>
@@ -481,29 +477,15 @@ class Security_Group_Edit extends Component {
               </th>
               <th>
                 {" "}
-                <input
-                  id="protocol"
-                  type="text"
-                  value={AutofillData[this.state.index].Protocol}
-                  ref={input => (this.protocol = input)}
-                />
+                <input id="protocol" type="text" value={AutofillData[this.state.index].Protocol} ref={input => (this.protocol = input)}/>
               </th>
               <th>
                 {" "}
-                <input
-                  id="portRange"
-                  type="text"
-                  defaultValue={AutofillData[this.state.index].PortRange}
-                  ref={input => (this.portRange = input)}
-                />
+                <input id="portRange" type="text" defaultValue={AutofillData[this.state.index].PortRange} ref={input => (this.portRange = input)}/>
               </th>
               <th>
                 {" "}
-                <input
-                  id="Description"
-                  type="text"
-                  ref={input => (this.description = input)}
-                />
+                <input id="Description" type="text" ref={input => (this.description = input)}/>
               </th>
             </tr>
           </table>

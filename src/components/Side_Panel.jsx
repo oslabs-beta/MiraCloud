@@ -125,17 +125,13 @@ class Side_Panel extends Component {
             <p>
               <span className="sidebar-title">Instance ID: </span>
               <span>
-                {this.props.activeNode.InstanceId
-                  ? this.props.activeNode.InstanceId
-                  : this.props.activeNode.DBInstanceIdentifier}
+                {this.props.activeNode.InstanceId ? this.props.activeNode.InstanceId : this.props.activeNode.DBInstanceIdentifier}
               </span>
             </p>
             <p>
               <span className="sidebar-title">Instance Status: </span>
               <span>
-                {this.props.activeNode.InstanceId
-                  ? this.props.activeNode.State.Name
-                  : this.props.activeNode.DBInstanceStatus}
+                {this.props.activeNode.InstanceId ? this.props.activeNode.State.Name : this.props.activeNode.DBInstanceStatus}
               </span>
             </p>
             <p>
@@ -156,15 +152,7 @@ class Side_Panel extends Component {
           </Collapsible>
           <Collapsible trigger="Node Details" open="true">
             <div id="main-info" className="node-info">
-              <ReactJson
-                src={nodeData}
-                name={"Active Node"}
-                theme={reactJsonconfig.theme}
-                indentWidth={reactJsonconfig.indentWidth}
-                iconStyle={reactJsonconfig.iconStyle}
-                displayObjectSize={reactJsonconfig.displayObjectSize}
-                displayDataTypes={reactJsonconfig.displayDataTypes}
-              />
+              <ReactJson src={nodeData} name={"Active Node"} theme={reactJsonconfig.theme}indentWidth={reactJsonconfig.indentWidth} iconStyle={reactJsonconfig.iconStyle} displayObjectSize={reactJsonconfig.displayObjectSize} displayDataTypes={reactJsonconfig.displayDataTypes}/>
             </div>
           </Collapsible>
         </div>
@@ -182,18 +170,8 @@ class Side_Panel extends Component {
     return (
       <div id="sidePanel">
         {sidePanelWelcome}
-        <Modal
-          isOpen={this.state.modalIsOpen}
-          onAfterOpen={this.afterOpenModal}
-          onRequestClose={this.closeModal}
-          style={customStyles}
-          contentLabel="Example Modal"
-        >
-          <SecGroupEdit
-            sgData={this.props.activeNode.MySecurityGroups}
-            onRequestClose={this.closeModal}
-            delete={this.state.delete}
-          />
+        <Modal isOpen={this.state.modalIsOpen} onAfterOpen={this.afterOpenModal} onRequestClose={this.closeModal} style={customStyles} contentLabel="Example Modal">
+          <SecGroupEdit sgData={this.props.activeNode.MySecurityGroups} onRequestClose={this.closeModal} delete={this.state.delete}/>
           <button onClick={this.closeModal}>Close</button>
         </Modal>
         {NodeDetails}
