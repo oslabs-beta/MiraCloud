@@ -3,21 +3,24 @@
 body{
   margin: 0px;
   font-family: $title-font;
+  background-color: $bg-color;
 }
 #app{
   display:grid;
   grid-template: 1fr;
   background-color: $bg-color;
 }
-#Menu{
-  // border-bottom: 1px outset $border-color;
-  // border-radius: 5px;
-  height: 40px;
-  max-width: 100%;
-  display: flex;
-  flex-direction: row;
-  // justify-content: space-between;
-}
+// #Menu{
+//   // border-bottom: 1px outset $border-color;
+//   // border-radius: 5px;
+//   height: 40px;
+//   max-width: 100%;
+//   display: flex;
+//   flex-direction: row;
+//   padding: 10px;
+//   border-bottom: 1px solid white;
+//   // justify-content: space-between;
+// }
 #mainContainer{
   display: flex;
   flex-direction: row;
@@ -31,7 +34,6 @@ body{
   word-wrap: break-word;
   border-left: 1px outset $border-color;
   border-radius: 5px;
-  margin-top:-40px;
 }
 #sidePanel p{
   padding-left:10px;
@@ -44,9 +46,17 @@ body{
   // margin-right: #{$side-bar-width};
   margin-left:20px;
   height:36px;
-  width:100px;
+  width:50px;
   border-radius: 5px;
+  margin: 10px 10px;
 }
+
+#refreshimg{
+  height:30px;
+  width:30px;
+}
+
+
 #loading img{
   margin-top: 45vh;
   margin-left: 50%;
@@ -82,7 +92,8 @@ h1, h2, h3, h4{
   margin: 0px;
 }
 #select-menu{
-  width:300px;
+  width: 200px;
+  margin: 10px 10px;
 }
 #welcome{
   text-align: center;
@@ -113,4 +124,50 @@ h1, h2, h3, h4{
 
 .sidebar-title{
   font-weight:bold;
+}
+
+#logout{
+  position: relative;
+  margin-left: 530px;
+  height: 36px;
+  width: 90px;
+  border-radius: 5px;
+  margin-left: 76%;
+}
+
+#loginContainer{
+  height: 90px;
+  flex-direction: column;
+  display: flex;
+  margin: 20% auto 50% 35%;
+}
+
+#login_keys{  
+  display: flex;
+}
+
+#accessKeys{
+  height: 28px;
+  margin: 4% auto 6% 8%;
+}
+
+#small_logo{
+  height: 100%;
+}
+
+#top-menu{
+  height: 40px;
+  max-width: 100%;
+  display: flex;
+  flex-direction: row;
+  padding: 10px;
+}
+
+#bottom-menu{
+  height: 40px;
+  max-width: 100%;
+  display: flex;
+  flex-direction: row;
+  padding: 10px;
+  border-top: 1px solid white;
 }

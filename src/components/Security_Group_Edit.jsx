@@ -14,7 +14,7 @@ class Security_Group_Edit extends Component{
     }
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleInOut = this.handleInOut.bind(this);
+    // this.handleInOut = this.handleInOut.bind(this);
     this.getSgTotal = this.getSgTotal.bind(this);
     this.checkSource = this.checkSource.bind(this);
 
@@ -25,7 +25,7 @@ class Security_Group_Edit extends Component{
     const {sgData} = this.props;
     const groupIds = [];
     for(let i = 0; i < sgData.length; i++){
-      groupIds.push(<option id="GroupId" value={sgData[i].GroupId} ref={(input) => this.GroupId = input}>{sgData[i].GroupId}</option>);
+      groupIds.push(<input id="GroupId" defaultValue={sgData[i].GroupId} ref={(input) => this.GroupId = input}/>);
     }
     return groupIds;
   }
@@ -35,21 +35,21 @@ class Security_Group_Edit extends Component{
       index: event.target.value
     });
   }
-  handleInOut(event) {
-    this.getSgTotal();
-    if(event.target.value === 'inbound' && this.state.inbound === false){
-      this.setState({
-        inbound: true,
-        outbound: false
-      })
-    }
-    if(event.target.value === 'outbound' && this.state.outbound === false){
-      this.setState({
-        inbound: false,
-        outbound: true
-      })
-    }
-  }
+  // handleInOut(event) {
+  //   this.getSgTotal();
+  //   if(event.target.value === 'inbound' && this.state.inbound === false){
+  //     this.setState({
+  //       inbound: true,
+  //       outbound: false
+  //     })
+  //   }
+  //   if(event.target.value === 'outbound' && this.state.outbound === false){
+  //     this.setState({
+  //       inbound: false,
+  //       outbound: true
+  //     })
+  //   }
+  // }
 
   checkSource(input){
     const cidrRegex = "^([0-9]{1,3}\.){3}[0-9]{1,3}(\/([0-9]|[1-2][0-9]|3[0-2]))?$";
@@ -69,8 +69,18 @@ class Security_Group_Edit extends Component{
     // async call to do get the api, then refresh
     console.log("type of ", typeof this.source.value)
     const ec2 = new AWS.EC2();
-    const params = {
-      GroupId: this.GroupId.value, 
+    const paramsIn = {
+      GroupId: this.GroupId.value, //selected node
+      IpPermissions: [
+         {
+        FromPort: ranges[0], 
+        IpProtocol: this.protocol.value, 
+        ToPort: toPort
+       }
+      ]
+     };
+     const paramsOut = {
+      GroupId: this.source.value, //inputted source
       IpPermissions: [
          {
         FromPort: ranges[0], 
@@ -81,48 +91,85 @@ class Security_Group_Edit extends Component{
      };
 
      if(this.checkSource(this.source.value)){
-       //checks if it is an IP address, saves it to CidrIp
-       params.IpPermissions[0].IpRanges = [{CidrIp:this.source.value, Description:this.description.value}]
+      paramsIn.IpPermissions[0].IpRanges = [{CidrIp:this.source.value, Description:this.description.value}];
+      this.setState({
+              inbound: true,
+              outbound: false
+      })
      }
+     else if(this.checkSource(this.GroupId.value)){
+      paramsIn.IpPermissions[0].IpRanges = [{CidrIp:this.GroupId.value, Description:this.description.value}];
+      this.setState({
+              inbound: false,
+              outbound: true
+      })
+     }
+    //  if(this.checkSource(this.source.value)){
+    //    //need to check this case of a IP!!!!!!! or anywhere, still not ready
+    //    //checks if it is an IP address, saves it to CidrIp
+    //    paramsIn.IpPermissions[0].IpRanges = [{CidrIp:this.source.value, Description:this.description.value}]
+    //    paramsOut.IpPermissions[0].IpRanges = [{CidrIp:this.GroupId.value, Description:this.description.value}]
+
+    //  }
      else{
        //if not IP then it is a security group id (sg-fdgriwerhcwke)
-        params.IpPermissions[0].UserIdGroupPairs = [{GroupId:this.source.value, Description:this.description.value}]
-
+        paramsIn.IpPermissions[0].UserIdGroupPairs = [{GroupId:this.source.value, Description:this.description.value}]
+        paramsOut.IpPermissions[0].UserIdGroupPairs = [{GroupId:this.GroupId.value, Description:this.description.value}]
      }
-     const editSGPromises = new Promise((resolve,reject) => {
-       if(this.state.inbound) {
-        ec2.authorizeSecurityGroupIngress(params, function(err, data) {
+    function editSGPromisesIn() { return new Promise((resolve,reject) => {
+        ec2.authorizeSecurityGroupIngress(paramsIn, function(err, data) {
           if (err){
             console.log('Data not inputted in correct format', err, err.stack); // an error occurred
             reject(err);
-          } 
-          else {
-            console.log(data);           // successful response
-            resolve();
           }
+          resolve(); 
         });
-       } else if (this.state.outbound) {
-         ec2.authorizeSecurityGroupEgress(params, function(err, data) {
+      });
+    };
+    function editSGPromisesOut(){
+      return new Promise((resolve, reject)=>{
+        ec2.authorizeSecurityGroupEgress(paramsOut, function(err, data) {
           if (err){
             console.log('Data not inputted in correct format', err, err.stack); // an error occurred
             reject(err);
-          } 
-          else{
-            console.log(data);           // successful response
-            resolve();
-          } 
-         }); 
-       } else {
-         alert('missing choices');
-       }
-     })
+          }
+          resolve(); 
+         });
+      });
+    };   
+
+    if(this.state.inbound){
+      editSGPromisesIn()
+      .then( (result) => {
+        this.props.onRequestClose()
+        console.log('Got the result: ' + result);
+      })
+      .catch(function(err) {
+        alert(err);
+      });
+    }
+    else if(this.state.outbound){
+      editSGPromisesOut()
+      .then((result) => {
+        this.props.onRequestClose()
+        // console.log('Got the result: ' + result);
+      })
+      .catch(function(err) {
+        alert(err);
+      });
+    }
+    else {
+      // console.log('its here');
+      editSGPromisesIn()
+     .then(()=>{editSGPromisesOut()})
      .then( (result) => {
       this.props.onRequestClose()
-      console.log('Got the result: ' + result);
+      // console.log('Got the result: ' + result);
     })
     .catch(function(err) {
       alert(err);
     });
+  }
 
     //  .then(this.props.onRequestClose() , reason => {
     //    alert(reason);
@@ -294,23 +341,35 @@ class Security_Group_Edit extends Component{
     <div id='modal-table'>
     <form onSubmit={this.handleSubmit}>
       <h2> Edit Inbound and Outbound Security Groups</h2>
-        <select>
-          {this.getSgTotal()}
-        </select>
-        <label>
-          <input type="radio" value="inbound" checked={this.state.inbound} onClick={this.handleInOut} />
-          Inbound (Ingress)
-        </label>
-        <label>
-          <input type="radio" value="outbound" checked={this.state.outbound} onClick={this.handleInOut} />
-          Outbound (Egress)
-        </label>
+      <table>
+        <tr>
+          <th>Inbound: </th>
+          <th></th>
+          <th></th>
+          <th>Outbound: </th>
+        </tr>
+        <tr>
+          <th>
+          {/* <input id="Source" type="text" defaultValue={this.getSgTotal()} ref={(input) => this.selectInbound = input} /> */}
+              {this.getSgTotal()}
+          </th>
+          <th><h2>{'\<-----'}</h2></th>
+          <th></th>
+          <th> 
+              <input id="Source" type="text" ref={(input) => this.source = input} />
+              <select> 
+              <option value="Custom">Custom</option>
+              <option value="Anywhere">Anywhere</option>
+              <option value="My IP">My IP</option>
+              </select>
+          </th>
+        </tr>
+      </table>
       <table>
         <tr>
           <th>Type</th>
           <th>Protocol</th>
           <th>Port Range</th>
-          <th>Source</th>
           <th>Description</th>
         </tr>
         <tr>
@@ -321,12 +380,6 @@ class Security_Group_Edit extends Component{
           </th>
           <th> <input id="protocol" type="text" value={AutofillData[this.state.index].Protocol} ref={(input) => this.protocol = input}/></th>
           <th> <input id="portRange" type="text" defaultValue={AutofillData[this.state.index].PortRange} ref={(input) => this.portRange = input}/></th>
-          <th> <select> 
-            <option value="Custom">Custom</option>
-            <option value="Anywhere">Anywhere</option>
-            <option value="My IP">My IP</option>
-            </select>
-            <input id="Source" type="text" ref={(input) => this.source = input} /></th>
           <th> <input id="Description" type="text" ref={(input) => this.description = input} /></th>
         </tr>
       </table>

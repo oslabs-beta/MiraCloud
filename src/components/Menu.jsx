@@ -24,8 +24,8 @@ class Menu extends Component {
           { value:'all', label: 'All Regions'},
           { value:'us-east-2', label: 'US East (Ohio)' },
           { value:'us-east-1', label: 'US East (N. Virginia)' },
-          { value:'us-west-2', label: 'US West (N. California)' },
-          { value:'us-west-1', label: 'US West (Oregon)' },
+          { value:'us-west-2', label: 'US West (Oregon)' },
+          { value:'us-west-1', label: 'US West (N. California)'  },
           { value:'ap-south-1', label: 'Asia Pacific (Mumbai)' },
           { value:'ap-northeast-3', label: 'Asia Pacific (Osaka-Local)' },
           { value:'ap-northeast-2', label: 'Asia Pacific (Seoul)' },
@@ -71,15 +71,16 @@ class Menu extends Component {
 
     return (
       <div id="Menu">
+        <div id='top-menu'>
+          <img id='small_logo' src="../src/assets/mira3.png" />
+          <button id="logout" onClick={handleLogOut}>Log Out</button>
+        </div>
         {/* select component for html in react jsx */}
-        <Select
-          id='select-menu' 
-          value={this.state.selectedOption}
-          onChange={handleChange}
-          options={options}
-          />
-       <button id="refresh" onClick={refresh}>Refresh</button>
-       <button id="logOut" onClick={handleLogOut}>Log Out</button>
+        <div id='bottom-menu'>
+          <h4>Choose a region:</h4>
+          <Select id='select-menu' value={this.state.selectedOption} onChange={handleChange} options={options}/>
+          <button id="refresh" onClick={refresh}><img id="refreshimg" src="../src/assets/refresh.png"/></button> 
+        </div>
       </div>
     );
   }
