@@ -19,13 +19,13 @@ const mapStateToProps = store => ({
   finishedFlag: store.graph.fetched,
   publicKey: store.login.awsPublicKey,
   privateKey: store.login.awsPrivateKey,
-  loginKey: store.login.loginKey
+  loginKey: true //store.login.loginKey
 })
 
 const mapDispatchToProps = dispatch => ({
   //get data on one single region
-    getAWSInstances: (instances) => {
-        dispatch(actions.getAWSInstances(instances));
+    getAWSInstances: (instances, key1, key2) => {
+        dispatch(actions.getAWSInstances(instances, key1, key2));
     },
     //show details on specific nodes on click
     getNodeDetails: (data) => {
