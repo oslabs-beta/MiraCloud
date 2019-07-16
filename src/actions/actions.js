@@ -37,7 +37,8 @@ export const getAWSInstancesError = err => ({
 //each service can have more than one security group. We find each security group and 
 //which other SG they are connected to through in-bound and out-bound
 
-export const getAWSInstances = (region) => {
+export const getAWSInstances = (region, key1, key2) => {
+  console.log('keys', key1, key2);
   //sdk config to send in the region
   AWS.config.update({
     region,  // since we figure out we get info for this region
@@ -530,7 +531,7 @@ export const getAllRegions = (publicKey, privateKey) => {
                   accessKeyId: "${publicKey}",
                   secretAccessKey: "${privateKey}"
                 }) {
-               s3  {
+                s3 {
                       get_region_s3 : getBucketLocation( input:{
                         Bucket: "${bucketNameArr[i]}"
                       }
