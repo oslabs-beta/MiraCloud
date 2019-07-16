@@ -1,4 +1,4 @@
-![Alt text](/src/assets/logosmall.png?raw=true)
+![Alt text](/src/assets/mira3.png?raw=true)
 
 # MiraCloud
 Mira is an organizational tool for AWS' frequently used services.

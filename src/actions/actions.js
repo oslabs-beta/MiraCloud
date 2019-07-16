@@ -47,7 +47,7 @@ export const getAWSInstances = (region, key1, key2) => {
   //like a mongoose model
   const ec2 = new AWS.EC2({});  // create object of whatever instance works
   const rds = new AWS.RDS({});
-  const s3 = new AWS.S3({});
+  //const s3 = new AWS.S3({});
   return (dispatch) => {
     dispatch(getAWSInstancesStart());
     /** HOW WE WANT THE DATA TO IDEALLY BE FORMATTED:
@@ -196,6 +196,8 @@ export const getAWSInstances = (region, key1, key2) => {
     })));
     // once all the promise's are resolved, dispatch the data to the reducer
     Promise.all(apiPromiseArray).then((values) => {
+      console.log('da region state in single region stuff',regionState)
+
       const edgeTable = {};
       for (let i = 0; i < sgRelationships.length; i++) {
         sgNodeCorrelations[sgRelationships[i][0]].forEach((val1, val2, set) => {
@@ -230,8 +232,6 @@ export const getNodeDetails = data => ({
 
 
 export const getAllRegions = (publicKey, privateKey) => {
-  console.log('public', publicKey);
-  console.log('private', privateKey);
   return (dispatch) => {
     dispatch(getAWSInstancesStart());
     axios({
@@ -559,14 +559,9 @@ export const getAllRegions = (publicKey, privateKey) => {
             */
             let regionOfBucket = resultObjFromQuery.data.data.aws.s3.get_region_s3.LocationConstraint;
             let currBucketName = bucketNameArr[i];
-            
-   
-       
             // compiling it all into the data
             graphData.compileS3Data(currBucketName, regionOfBucket);
             resolve();
-            
-            
           })
         
         }));
