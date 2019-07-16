@@ -11,9 +11,9 @@ class Graph extends Component{
   }
   render() {
     let fetching;
-    if(!this.props.fetchingFlag && !this.props.finishedFlag) {
-      fetching = <div id="welcome"><input type="image" src="../src/assets/logo.png" alt="Mira Logo"></input><br/><br/><h2>Welcome to Mira</h2><h2>Select a region to get started</h2></div>
-    }
+    // if(!this.props.fetchingFlag && !this.props.finishedFlag) {
+    //   fetching = <div id="welcome"><input type="image" src="../src/assets/logo.png" alt="Mira Logo"></input><br/><br/><h2>Welcome to Mira</h2><h2>Select a region to get started</h2></div>
+    // }
     if(this.props.fetchingFlag){
       fetching = <div id="loading" ><img src="../src/assets/loading.svg" alt="Loading..."></img></div>
     } 
