@@ -3,8 +3,8 @@ const AWS = require('aws-sdk');
 const options = {
     'us-east-1': 'US East (N. Virginia)',
     'us-east-2': 'US East (Ohio)',
-    'us-west-2': 'US West (N. California)',
-    'us-west-1': 'US West (Oregon)',
+    'us-west-2': 'US West (Oregon)',
+    'us-west-1': 'US West (N. California)',
     'ap-south-1': 'Asia Pacific (Mumbai)',
     'ap-northeast-3': 'Asia Pacific (Osaka-Local)',
     'ap-northeast-2': 'Asia Pacific (Seoul)',
