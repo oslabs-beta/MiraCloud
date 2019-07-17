@@ -1,8 +1,8 @@
-import React, { Component } from "react";
-import ReactJson from "react-json-view";
-import SecGroupEdit from "./Security_Group_Edit";
-import Modal from "react-modal";
-import Collapsible from "react-collapsible";
+import React, {Component} from 'react';
+import ReactJson from 'react-json-view';
+import SecGroupEdit from './Security_Group_Edit';
+import Modal from 'react-modal';
+import Collapsible from 'react-collapsible';
 // import {Switch, BrowserRouter as Router, Route, NavLink, withRouter } from 'react-router-dom';
 import Delete from "react-collapsible";
 
@@ -33,11 +33,11 @@ class Side_Panel extends Component {
   }
 
   delete() {
-    this.setState({ delete: true });
+    this.setState({delete: true});
   }
 
   openModal() {
-    this.setState({ modalIsOpen: true });
+    this.setState({modalIsOpen: true});
   }
 
   afterOpenModal() {
@@ -77,12 +77,12 @@ class Side_Panel extends Component {
 
     if (Object.keys(this.props.activeNode).length > 0) {
       const reactJsonconfig = {
-        indentWidth: 1,
-        name: this.props.activeNode.InstanceId,
+        indentWidth:1,
+        name:this.props.activeNode.InstanceId,
         theme: "bright:inverted",
-        iconStyle: "square",
-        displayObjectSize: false,
-        displayDataTypes: false
+        iconStyle:"square",
+        displayObjectSize:false,
+        displayDataTypes:false
       };
       let securityGroupNames;
       if (this.props.activeNode.MySecurityGroups) {

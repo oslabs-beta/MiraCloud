@@ -1,15 +1,15 @@
-import React, { Component } from "react";
+import React, {Component} from 'react';
 
-const AWS = require("aws-sdk");
+const AWS = require('aws-sdk');
 
 class Security_Group_Edit extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      index: 0,
+      index : 0,
       inbound: false,
       outbound: false,
-      sgDataArray: []
+      sgDataArray:[]
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -18,9 +18,9 @@ class Security_Group_Edit extends Component {
     this.checkSource = this.checkSource.bind(this);
   }
 
-  getSgTotal() {
+  getSgTotal(){
     console.log("this is sgData from getSgTotal", this.props.sgData);
-    const { sgData } = this.props;
+    const {sgData} = this.props;
     const groupIds = [];
     for (let i = 0; i < sgData.length; i++) {
       groupIds.push(
@@ -61,15 +61,15 @@ class Security_Group_Edit extends Component {
     if (input.match(cidrRegex)) return true;
   }
 
-  handleSubmit(event) {
+  handleSubmit(event){
     let ranges;
     let toPort;
-    if (this.portRange.value == "all" || this.portRange.value === "All") {
+    if (this.portRange.value == 'all' || this.portRange.value === 'All') {
       ranges = [0];
       toPort = 65535;
     } else {
       ranges = this.portRange.value.split("-");
-      toPort = ranges.length > 1 ? ranges[1] : ranges[0];
+      toPort = ranges.length > 1 ? ranges[1]:ranges[0];
     }
     // async call to do get the api, then refresh
     console.log("type of ", typeof this.source.value);
@@ -131,22 +131,22 @@ class Security_Group_Edit extends Component {
     function editSGPromisesIn() {
       return new Promise((resolve, reject) => {
         ec2.authorizeSecurityGroupIngress(paramsIn, function(err, data) {
-          if (err) {
-            console.log("Data not inputted in correct format", err, err.stack); // an error occurred
+          if (err){
+            console.log('Data not inputted in correct format', err, err.stack); // an error occurred
             reject(err);
           }
-          resolve();
+          resolve(); 
         });
       });
     }
-    function editSGPromisesOut() {
-      return new Promise((resolve, reject) => {
+    function editSGPromisesOut(){
+      return new Promise((resolve, reject)=>{
         ec2.authorizeSecurityGroupEgress(paramsOut, function(err, data) {
           if (err) {
             console.log("Data not inputted in correct format", err, err.stack); // an error occurred
             reject(err);
           }
-          resolve();
+          resolve(); 
         });
       });
     }
