@@ -56,15 +56,14 @@ class Security_Group_Edit extends Component {
   // }
 
   checkSource(input) {
-    const cidrRegex =
-      "^([0-9]{1,3}.){3}[0-9]{1,3}(/([0-9]|[1-2][0-9]|3[0-2]))?$";
+    const cidrRegex ="^([0-9]{1,3}.){3}[0-9]{1,3}(/([0-9]|[1-2][0-9]|3[0-2]))?$";
     if (input.match(cidrRegex)) return true;
   }
 
   handleSubmit(event){
     let ranges;
     let toPort;
-    if (this.portRange.value == 'all' || this.portRange.value === 'All') {
+    if(this.portRange.value == 'all' || this.portRange.value === 'All'){
       ranges = [0];
       toPort = 65535;
     } else {
@@ -77,20 +76,20 @@ class Security_Group_Edit extends Component {
     const paramsIn = {
       GroupId: this.GroupId.value, //selected node
       IpPermissions: [
-        {
-          FromPort: ranges[0],
-          IpProtocol: this.protocol.value,
-          ToPort: toPort
-        }
+      {
+        FromPort: ranges[0],
+        IpProtocol: this.protocol.value,
+        ToPort: toPort
+      }
       ]
     };
-    const paramsOut = {
+      const paramsOut = {
       GroupId: this.source.value, //inputted source
       IpPermissions: [
         {
-          FromPort: ranges[0],
-          IpProtocol: this.protocol.value,
-          ToPort: toPort
+        FromPort: ranges[0],
+        IpProtocol: this.protocol.value,
+        ToPort: toPort
         }
       ]
     };
@@ -166,7 +165,7 @@ class Security_Group_Edit extends Component {
     function revokeSGPromisesOut() {
       return new Promise((resolve, reject) => {
         ec2.revokeSecurityGroupEgress(paramsOut, function(err, data) {
-          if (err) {
+          if(err){
             console.log(err, err.stack);
             reject(err);
           } // an error occurred
@@ -174,8 +173,8 @@ class Security_Group_Edit extends Component {
         });
       });
     }
-    if (!this.props.delete) {
-      if (this.state.inbound) {
+    if(!this.props.delete) {
+      if(this.state.inbound) {
         editSGPromisesIn()
           .then(result => {
             this.props.onRequestClose();
