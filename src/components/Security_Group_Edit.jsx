@@ -434,11 +434,7 @@ class Security_Group_Edit extends Component {
     return (
       <div id="modal-table">
         <form onSubmit={this.handleSubmit}>
-          {!this.props.delete ? (
-            <h2> Edit Inbound and Outbound Security Groups</h2>
-          ) : (
-            <h2>Delete Security Rules</h2>
-          )}
+          {!this.props.delete ? (<h2> Edit Inbound and Outbound Security Groups</h2>) : (<h2>Delete Security Rules</h2>)}
           <table>
             <tr>
               <th>Inbound: </th>
@@ -447,12 +443,8 @@ class Security_Group_Edit extends Component {
               <th>Outbound: </th>
             </tr>
             <tr>
-              <th>
-                {this.getSgTotal()}
-              </th>
-              <th>
-                <h2>{"<-----"}</h2>
-              </th>
+              <th>{this.getSgTotal()}</th>
+              <th><h2>{"<-----"}</h2></th>
               <th />
               <th>
                 <input id="Source" type="text" ref={input => (this.source = input)}/>
@@ -472,21 +464,10 @@ class Security_Group_Edit extends Component {
               <th>Description</th>
             </tr>
             <tr>
-              <th>
-                <select onChange={this.handleChange}>{AutoFillArray}</select>
-              </th>
-              <th>
-                {" "}
-                <input id="protocol" type="text" value={AutofillData[this.state.index].Protocol} ref={input => (this.protocol = input)}/>
-              </th>
-              <th>
-                {" "}
-                <input id="portRange" type="text" defaultValue={AutofillData[this.state.index].PortRange} ref={input => (this.portRange = input)}/>
-              </th>
-              <th>
-                {" "}
-                <input id="Description" type="text" ref={input => (this.description = input)}/>
-              </th>
+              <th><select onChange={this.handleChange}>{AutoFillArray}</select></th>
+              <th><input id="protocol" type="text" value={AutofillData[this.state.index].Protocol} ref={input => (this.protocol = input)}/></th>
+              <th><input id="portRange" type="text" defaultValue={AutofillData[this.state.index].PortRange} ref={input => (this.portRange = input)}/></th>
+              <th><input id="Description" type="text" ref={input => (this.description = input)}/></th>
             </tr>
           </table>
           <input type="submit" value="Submit" />
