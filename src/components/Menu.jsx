@@ -76,7 +76,7 @@ class Menu extends Component {
         if(selectedOption.value === 'all'){
           this.props.getAllRegions(this.props.publicKey, this.props.privateKey);
         } else{
-          this.props.getAWSInstances(selectedOption.value);
+          this.props.getAWSInstances(selectedOption.value, this.props.publicKey, this.props.privateKey);
         }
       }
     };
