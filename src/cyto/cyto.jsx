@@ -151,9 +151,8 @@ class Cyto extends PureComponent {
         }
         // iterate through everything in state to gather VPC, availability zone, EC2 and RDS instances and creating nodes for each
         for (let vpc in this.props.regionData) {
-            console.log('VPCCCCC', vpc);
             let vpcObj = this.props.regionData[vpc];
-           
+
             
             if (vpcObj.hasOwnProperty("region") && !this.state.regions.has(vpcObj.region)) {
                 this.cy.add(new Region(vpcObj.region).getRegionObject());
@@ -198,7 +197,6 @@ class Cyto extends PureComponent {
             let s3Instances = vpcObj.S3;
             if (s3Instances){
                 for (let i = 0; i < s3Instances.length; i++){
-                    console.log('S3 INSTANCE', s3Instances[i]);
                     this.cy.add(new S3(s3Instances[i], vpcObj.region + "-" + vpc, null).getS3Object());
                     this.state.nodes[s3Instances[i]] = [s3Instances[i], "S3", vpcObj.region, vpc];
                 }

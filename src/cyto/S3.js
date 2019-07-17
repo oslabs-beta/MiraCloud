@@ -23,7 +23,7 @@ class S3 {
       ]
     }
     else{
-      return {group: 'nodes', data: {  parent:this.parent, label: "S3"}, classes: 'S3'}
+      return {group: 'nodes', data: {  parent:this.parent, label: "S3: " + this.data}, classes: 'S3'}
     }
     
   }
