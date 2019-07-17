@@ -47,7 +47,7 @@ export const getAWSInstances = (region, key1, key2) => {
   //like a mongoose model
   const ec2 = new AWS.EC2({});  // create object of whatever instance works
   const rds = new AWS.RDS({});
-  const s3 = new AWS.S3({});
+  //const s3 = new AWS.S3({});
   return (dispatch) => {
     dispatch(getAWSInstancesStart());
     /** HOW WE WANT THE DATA TO IDEALLY BE FORMATTED:
@@ -75,7 +75,11 @@ export const getAWSInstances = (region, key1, key2) => {
     const sgRelationships = []; // array of arrays where each inside looks like [ [inbound sg, outbound sg] ]
     const sgNodeCorrelations = {};
     const apiPromiseArray = [];
+    // Adding S3 Query
     // adding new promise to promise array
+   
+
+        
     apiPromiseArray.push(new Promise(((resolve, reject) => {
       const innerPromiseArray = [];
       // make an api call to get information about RDS'
@@ -90,12 +94,12 @@ export const getAWSInstances = (region, key1, key2) => {
           //console log what comes in the data to see if there's anymore useful info
           //we can use later
           for (let i = 0; i < data.DBInstances.length; i++) {
+
             const DBinstances = data.DBInstances[i];
             // destructure the data for relevant data
             const {
               DBSubnetGroup: { VpcId }, AvailabilityZone, DbiResourceId, VpcSecurityGroups,
-            } = DBinstances;
-            // if the property doesn't exist within the object, create an object to save all the data in
+            } = DBinstances;            // if the property doesn't exist within the object, create an object to save all the data in
             if (!regionState.hasOwnProperty(VpcId)) regionState[VpcId] = {};
             if (!regionState[VpcId].hasOwnProperty(AvailabilityZone)) regionState[VpcId][AvailabilityZone] = {};
             if (!regionState[VpcId][AvailabilityZone].hasOwnProperty('RDS')) regionState[VpcId][AvailabilityZone].RDS = {};
@@ -139,6 +143,7 @@ export const getAWSInstances = (region, key1, key2) => {
     })));
     // get ec2 instances from API
     apiPromiseArray.push(new Promise(((resolve, reject) => {
+
       const innerPromiseArray = [];
       ec2.describeInstances(params, (err, data) => {
         if (err) {
@@ -147,6 +152,7 @@ export const getAWSInstances = (region, key1, key2) => {
         } else {
           console.log('EC2 data from SDK', data);
           // data is formatted differently from RDS, needs an extra layer of iteration
+          
           for (let i = 0; i < data.Reservations.length; i++) {
             const instances = data.Reservations[i].Instances;
             for (let j = 0; j < instances.length; j++) {
@@ -194,8 +200,100 @@ export const getAWSInstances = (region, key1, key2) => {
         }
       });
     })));
+    apiPromiseArray.push( new Promise((mainResolve, mainReject) => {
+      axios({
+        method: 'post',
+        url: 'https://graphql-compose.herokuapp.com/aws/',
+        data: {
+          query: `
+          query {
+            aws(config: {
+              accessKeyId: "${key1}",
+              secretAccessKey: "${key2}"
+            }) {
+              s3{  bucketlist_s3 : listBuckets{
+                  ...GetBucketLocationData
+              }
+              }
+            }
+          }
+  
+          fragment GetBucketLocationData on AwsS3ListBucketsOutput{
+            Buckets{
+              Name
+              CreationDate
+            }
+          }  
+          `
+        }
+          }).then((listData) => {
+            const buckArr = listData.data.data.aws.s3.bucketlist_s3.Buckets;
+            const namesOfBuckets = []
+  
+            buckArr.forEach((bucketObj) => {
+              namesOfBuckets.push(bucketObj['Name']);
+            })
+              const inPromiseArr = [];
+            for (let i = 0; i < namesOfBuckets.length; i += 1) {
+              inPromiseArr.push(new Promise((innerResolve, reject) => {
+                // bucket region queries
+                axios({
+                  method: 'post',
+                  url: 'https://graphql-compose.herokuapp.com/aws/',
+                  data: {
+                    query: `
+                    query {
+                      aws(config: {
+                        accessKeyId: "${key1}",
+                        secretAccessKey: "${key2}"
+                      }) {
+                      s3 {
+                            get_region_s3 : getBucketLocation( input:{
+                              Bucket: "${namesOfBuckets[i]}"
+                            }
+                            ) {
+                              ...GetBucketLocationData
+                            }  
+                          }
+                      }        
+                      }            
+                         fragment GetBucketLocationData on AwsS3GetBucketLocationOutput{
+                          LocationConstraint
+                        }  
+                    `
+                  }
+                }).then((resultObjFromQuery) => {
+                  // The money
+                  let currBucketName = namesOfBuckets[i];
+                  let regionOfBucket = resultObjFromQuery.data.data.aws.s3.get_region_s3.LocationConstraint;
+                  // compiling it all into the data
+  
+                  if ( region === regionOfBucket) {
+                    for (let theOnlyVPC in regionState) {
+                      if (regionState[theOnlyVPC]['S3']){
+                        regionState[theOnlyVPC]['S3'].push(currBucketName);
+                      }  
+                      else {
+                        regionState[theOnlyVPC]['S3'] = [];
+                        regionState[theOnlyVPC]['S3'].push(currBucketName);
+                      }
+                    }
+                  }
+                  innerResolve();
+                  reject();
+                })   
+              }));
+            }
+            Promise.all(inPromiseArr).then(() => {
+              mainResolve();
+            })
+          }).catch((err) => console.log('show me the err', err))
+      }));
+
     // once all the promise's are resolved, dispatch the data to the reducer
     Promise.all(apiPromiseArray).then((values) => {
+      console.log('da region state in single region stuff',regionState)
+
       const edgeTable = {};
       for (let i = 0; i < sgRelationships.length; i++) {
         sgNodeCorrelations[sgRelationships[i][0]].forEach((val1, val2, set) => {
@@ -230,8 +328,6 @@ export const getNodeDetails = data => ({
 
 
 export const getAllRegions = (publicKey, privateKey) => {
-  console.log('public', publicKey);
-  console.log('private', privateKey);
   return (dispatch) => {
     dispatch(getAWSInstancesStart());
     axios({
@@ -505,11 +601,10 @@ export const getAllRegions = (publicKey, privateKey) => {
       const bucketlistArr = awsS3.bucketlist_s3.Buckets;
       const bucketNameArr = [];
 
-      console.log('BUCKODUCKO', bucketlistArr);
+
       bucketlistArr.forEach((bucketObj) => {
         bucketNameArr.push(bucketObj['Name']);
       })
-      console.log('NAME OF BUCKET', bucketNameArr);
 
       /*
       create a promise array that pushes all bucket region queries for length of bucketname array
@@ -517,8 +612,6 @@ export const getAllRegions = (publicKey, privateKey) => {
       */
       const getBucketRegion = [];
       for (let i = 0; i < bucketNameArr.length; i += 1) {
-        console.log('the names', bucketNameArr[i]);
-        console.log('the type of', typeof bucketNameArr[i]);
         getBucketRegion.push(new Promise((resolve, reject) => {
           // bucket region queries
           axios({
@@ -559,14 +652,9 @@ export const getAllRegions = (publicKey, privateKey) => {
             */
             let regionOfBucket = resultObjFromQuery.data.data.aws.s3.get_region_s3.LocationConstraint;
             let currBucketName = bucketNameArr[i];
-            
-   
-       
             // compiling it all into the data
             graphData.compileS3Data(currBucketName, regionOfBucket);
             resolve();
-            
-            
           })
         
         }));
