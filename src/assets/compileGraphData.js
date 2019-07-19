@@ -39,6 +39,7 @@ class compileGraphData {
       });
       this.ec2  = new AWS.EC2({});
       const innerPromiseArray =[];
+
   
       for(let i = 0; i < data.DBInstances.length; i++) {
         let DBinstances = data.DBInstances[i];
@@ -100,6 +101,8 @@ class compileGraphData {
       AWS.config.update({
         region,
       });
+      console.log("REGION IS HERE 5",AWS.config.region)
+
       this.ec2 = new AWS.EC2({});
       const innerPromiseArray =[];
       for(let i = 0; i < data.Reservations.length; i ++){

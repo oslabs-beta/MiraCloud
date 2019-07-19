@@ -8,6 +8,8 @@
     
     const params = {};
 
+    
+
     export const logIn = () => ({
       type: actionTypes.LOG_IN,
     })
@@ -40,6 +42,7 @@
     export const getAWSInstances = (region) => {
       //sdk config to send in the region
       AWS.config.update({
+
         region,  // since we figure out we get info for this region
       });
       //to allow api calls you create a new instance of ec2 and rds --> allows method
