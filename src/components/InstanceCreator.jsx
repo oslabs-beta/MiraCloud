@@ -103,10 +103,12 @@ event.preventDefault();
       let paramsSG = {
        GroupId: `${activeNode.SecurityGroups[0].GroupId}`
       };
+      requests++;
+      console.log('#',requests);
       ec2.deleteSecurityGroup(paramsSG, function(err, data) {
         if (err){
-          if(requests > 5) reject(err);
-          setTimeout(deleteSG(),60000); 
+          if(requests > 110) reject(err);
+          else setTimeout(deleteSG(),60000); 
         } // an error occurred
         else resolve(data);          // successful response
       });
