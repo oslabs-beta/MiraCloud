@@ -50,7 +50,7 @@ class App extends Component{
   render(){
     console.log(this.props);
     let display = [];
-    display.push(<Menu publicKey={this.props.publicKey} privateKey={this.props.privateKey} getAWSInstances={this.props.getAWSInstances} currentRegion={this.props.currentRegion} getAllRegions={this.props.getAllRegions} />);
+    display.push(<Menu activeNode={this.props.activeNode} publicKey={this.props.publicKey} privateKey={this.props.privateKey} getAWSInstances={this.props.getAWSInstances} currentRegion={this.props.currentRegion} getAllRegions={this.props.getAllRegions} />);
     display.push(<MainContainer getAWSKeys={this.props.getAWSKeys} getAWSInstances={this.props.getAWSInstances} regionData={this.props.regionData} 
       getNodeDetails={this.props.getNodeDetails} activeNode={this.props.activeNode} fetchingFlag={this.props.fetchingFlag} finishedFlag={this.props.finishedFlag}
       edgeTable= {this.props.edgeTable}/>);
