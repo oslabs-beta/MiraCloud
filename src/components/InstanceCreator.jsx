@@ -82,7 +82,6 @@ event.preventDefault();
     console.log(this.props.activeNode);
     let instanceId = this.source.value;
     let activeNode = this.props.activeNode;
-    let requests = 0;
     // console.log('instanceid', `${instanceId}`);
     // console.log(this.type.value);
     function checkSG(){return new Promise((resolve, reject)=>{
@@ -102,13 +101,10 @@ event.preventDefault();
       let ec2 = new AWS.EC2();
       let paramsSG = {
        GroupId: `${activeNode.SecurityGroups[0].GroupId}`
-      };
-      requests++;
-      console.log('#',requests);
+      }
       ec2.deleteSecurityGroup(paramsSG, function(err, data) {
         if (err){
-          if(requests > 110) reject(err);
-          else setTimeout(deleteSG(),60000); 
+          reject(err); 
         } // an error occurred
         else resolve(data);          // successful response
       });
