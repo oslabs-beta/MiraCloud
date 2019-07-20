@@ -150,7 +150,8 @@ class InstanceCreator extends Component {
 			event.preventDefault();
 		}
 		this.setState({sg: String( Math.floor(Math.random() * 2000))})
-}; 
+		// event.reload(true);
+	}; 
 	// stayable two strings
 	deleteInstance() {
 		// const ec2 = new AWS.EC2();
