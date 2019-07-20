@@ -630,13 +630,42 @@ export const getAllRegions = (publicKey, privateKey) => {
                       }
                       ) {
                         ...GetBucketLocationData
-                      }  
+                      }
+                      get_bucket_tagging_s3: getBucketTagging( input:{
+                        Bucket: "${bucketNameArr[i]}"
+                      }
+                      ) {
+                        ...GetBucketTaggingData
+                      }
+                      get_bucket_website_s3: getBucketWebsite( input:{
+                        Bucket: "${bucketNameArr[i]}"
+                      }
+                      ) {
+                        ...GetBucketWebsiteData
+                      }
                     }
                 }        
                 }            
-                   fragment GetBucketLocationData on AwsS3GetBucketLocationOutput{
+                  fragment GetBucketLocationData on AwsS3GetBucketLocationOutput{
                     LocationConstraint
                   }  
+                  fragment GetBucketTaggingData on AwsS3GetBucketTaggingOutput {
+                    TagSet{
+                      Key
+                      Value
+                    }
+                  }
+                  fragment GetBucketWebsiteData on AwsS3GetBucketWebsiteOutput {
+                    RedirectAllRequestsTo {
+                      Protocol
+                    }
+                    IndexDocument {
+                      Suffix
+                    }
+                    ErrorDocument{
+                      Key
+                    }
+                  }
               `
             }
           }).then((resultObjFromQuery) => {
@@ -651,9 +680,10 @@ export const getAllRegions = (publicKey, privateKey) => {
             }
             */
             let regionOfBucket = resultObjFromQuery.data.data.aws.s3.get_region_s3.LocationConstraint;
+            let currS3DataObject = resultObjFromQuery.data.data.aws.s3
             let currBucketName = bucketNameArr[i];
             // compiling it all into the data
-            graphData.compileS3Data(currBucketName, regionOfBucket);
+            graphData.compileS3Data(currBucketName, regionOfBucket, currS3DataObject );
             resolve();
           })
         

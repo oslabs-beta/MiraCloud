@@ -4,7 +4,6 @@ import SecGroupEdit from './Security_Group_Edit';
 import Modal from 'react-modal';
 import Collapsible from 'react-collapsible';
 // import {Switch, BrowserRouter as Router, Route, NavLink, withRouter } from 'react-router-dom';
-import Delete from "react-collapsible";
 
 const customStyles = {
   content: {

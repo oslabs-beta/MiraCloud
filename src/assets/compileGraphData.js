@@ -158,8 +158,10 @@ class compileGraphData {
         });  
     }
 
-    compileS3Data(currentBucketName, region){
-        for ( let vpc in this.regionState){
+    compileS3Data(currentBucketName, region, currS3DataObject){
+        console.log('CURRENT BUCKET NAME', currentBucketName);
+        console.log('current s3 logic', currS3DataObject)
+        for (let vpc in this.regionState){
             if (this.regionState[vpc].region === options[region]){
                 if(this.regionState[vpc]['S3']){
                     this.regionState[vpc]['S3'].push(currentBucketName);
@@ -167,9 +169,13 @@ class compileGraphData {
                     this.regionState[vpc]['S3'] = [];
                     this.regionState[vpc]['S3'].push(currentBucketName);
                 }
-            }
-            
+                // logic for S3DataObject
+                if(!this.regionState[vpc]['S3Data']) this.regionState[vpc]['S3Data'] = {};
+                const S3Data = this.regionState[vpc]['S3Data'];
+                S3Data[currentBucketName] = currS3DataObject;  
+            }  
         }
+        console.log('S3 IN FILE COMPILEGRAPHDATA', this.regionState);
     }
 
     // createEdges() {
