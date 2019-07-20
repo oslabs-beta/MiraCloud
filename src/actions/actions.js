@@ -253,13 +253,42 @@ export const getAWSInstances = (region, key1, key2) => {
                             }
                             ) {
                               ...GetBucketLocationData
-                            }  
+                            }
+                            get_bucket_tagging_s3: getBucketTagging( input:{
+                              Bucket: "${namesOfBuckets[i]}"
+                            }
+                            ) {
+                              ...GetBucketTaggingData
+                            }
+                            get_bucket_website_s3: getBucketWebsite( input:{
+                              Bucket: "${namesOfBuckets[i]}"
+                            }
+                            ) {
+                              ...GetBucketWebsiteData
+                            }
                           }
                       }        
                       }            
-                         fragment GetBucketLocationData on AwsS3GetBucketLocationOutput{
+                        fragment GetBucketLocationData on AwsS3GetBucketLocationOutput{
                           LocationConstraint
                         }  
+                        fragment GetBucketTaggingData on AwsS3GetBucketTaggingOutput {
+                          TagSet{
+                            Key
+                            Value
+                          }
+                        }
+                        fragment GetBucketWebsiteData on AwsS3GetBucketWebsiteOutput {
+                          RedirectAllRequestsTo {
+                            Protocol
+                          }
+                          IndexDocument {
+                            Suffix
+                          }
+                          ErrorDocument{
+                            Key
+                          }
+                        }
                     `
                   }
                 }).then((resultObjFromQuery) => {
@@ -277,6 +306,10 @@ export const getAWSInstances = (region, key1, key2) => {
                         regionState[theOnlyVPC]['S3'] = [];
                         regionState[theOnlyVPC]['S3'].push(currBucketName);
                       }
+                      // logic for S3
+                      if(!regionState[theOnlyVPC]['S3Data']) regionState[theOnlyVPC]['S3Data'] = {};
+                      const S3Data = regionState[theOnlyVPC]['S3Data'];
+                      S3Data[currBucketName] = resultObjFromQuery.data.data.aws.s3;  
                     }
                   }
                   innerResolve();

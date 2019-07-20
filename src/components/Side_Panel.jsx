@@ -78,8 +78,8 @@ class Side_Panel extends Component {
       const reactJsonconfig = {
         indentWidth:1,
         name:this.props.activeNode.InstanceId,
-        theme: "bright:inverted",
-        iconStyle:"square",
+        theme: "monokai",
+        iconStyle:"circle",
         displayObjectSize:false,
         displayDataTypes:false
       };
@@ -176,7 +176,7 @@ class Side_Panel extends Component {
                 {this.props.activeNode.InstanceId ? this.props.activeNode.State.Name : this.props.activeNode.DBInstanceStatus}
               </span>
             </p>
-            {sgDetails}
+            {/* {sgDetails} */}
           </Collapsible>
           <Collapsible trigger="Node Details" open="true">
             <div id="main-info" className="node-info">
