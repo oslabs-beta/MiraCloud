@@ -85,7 +85,7 @@ class Menu extends Component {
         if(this.props.currentRegion === 'all'){
           this.props.getAllRegions(this.props.publicKey, this.props.privateKey);
         }
-        else this.props.getAWSInstances(this.props.currentRegion);
+        else this.props.getAWSInstances(this.props.currentRegion, this.props.publicKey, this.props.privateKey);
       }
     };
      // Log out--  notifies main.js about change and changes action 
