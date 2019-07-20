@@ -106,6 +106,7 @@ class compileGraphData {
         for (let i = 0; i < data.Reservations.length; i++) {
             let instances = data.Reservations[i].Instances;
             for (let j = 0; j < instances.length; j++) {
+                if (instances[j].State.Name !== 'terminated'){
                 let { VpcId, Placement: { AvailabilityZone }, InstanceId, SecurityGroups } = instances[j];
                 if (!this.regionState.hasOwnProperty(VpcId)) this.regionState[VpcId] = {};
                 if (!this.regionState[VpcId].hasOwnProperty(AvailabilityZone)) this.regionState[VpcId][AvailabilityZone] = {};
@@ -147,6 +148,7 @@ class compileGraphData {
                     })
                 }));
 
+            }
             }
         }
 

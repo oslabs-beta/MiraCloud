@@ -78,8 +78,6 @@ export const getAWSInstances = (region, key1, key2) => {
     // Adding S3 Query
     // adding new promise to promise array
    
-
-        
     apiPromiseArray.push(new Promise(((resolve, reject) => {
       const innerPromiseArray = [];
       // make an api call to get information about RDS'
@@ -156,6 +154,7 @@ export const getAWSInstances = (region, key1, key2) => {
           for (let i = 0; i < data.Reservations.length; i++) {
             const instances = data.Reservations[i].Instances;
             for (let j = 0; j < instances.length; j++) {
+              if (instances[j].State.Name !== 'terminated'){
               const {
                 VpcId, Placement: { AvailabilityZone }, InstanceId, SecurityGroups,
               } = instances[j];
@@ -192,6 +191,7 @@ export const getAWSInstances = (region, key1, key2) => {
                   }
                 });
               })));
+            }
             }
           }
           Promise.all(innerPromiseArray).then(() => {
