@@ -19,13 +19,13 @@ const mapStateToProps = store => ({
   finishedFlag: store.graph.fetched,
   publicKey: store.login.awsPublicKey,
   privateKey: store.login.awsPrivateKey,
-  loginKey: store.login.loginKey
+  loginKey: true //store.login.loginKey
 })
 
 const mapDispatchToProps = dispatch => ({
   //get data on one single region
-    getAWSInstances: (instances) => {
-        dispatch(actions.getAWSInstances(instances));
+    getAWSInstances: (instances, key1, key2) => {
+        dispatch(actions.getAWSInstances(instances, key1, key2));
     },
     //show details on specific nodes on click
     getNodeDetails: (data) => {
@@ -50,7 +50,7 @@ class App extends Component{
   render(){
     console.log(this.props);
     let display = [];
-    display.push(<Menu publicKey={this.props.publicKey} privateKey={this.props.privateKey} getAWSInstances={this.props.getAWSInstances} currentRegion={this.props.currentRegion} getAllRegions={this.props.getAllRegions} />);
+    display.push(<Menu activeNode={this.props.activeNode} publicKey={this.props.publicKey} privateKey={this.props.privateKey} getAWSInstances={this.props.getAWSInstances} currentRegion={this.props.currentRegion} getAllRegions={this.props.getAllRegions} />);
     display.push(<MainContainer getAWSKeys={this.props.getAWSKeys} getAWSInstances={this.props.getAWSInstances} regionData={this.props.regionData} 
       getNodeDetails={this.props.getNodeDetails} activeNode={this.props.activeNode} fetchingFlag={this.props.fetchingFlag} finishedFlag={this.props.finishedFlag}
       edgeTable= {this.props.edgeTable}/>);

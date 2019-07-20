@@ -3,6 +3,8 @@ import Select from 'react-select';
 import { connect } from 'react-redux';
 const {ipcRenderer} = require('electron');
 import * as actions from "../actions/actions.js";
+import Modal from 'react-modal';
+import InstanceCreator from './InstanceCreator.jsx'
 
 const mapDispatchToProps = dispatch => ({
   logOut: () => {
@@ -10,12 +12,36 @@ const mapDispatchToProps = dispatch => ({
   }
 }) 
 
+const customStyles = {
+  content : {
+    top                   : '50%',
+    left                  : '50%',
+    right                 : 'auto',
+    bottom                : 'auto',
+    marginRight           : '-50%',
+    transform             : 'translate(-50%, -50%)'
+  }
+};
+
 class Menu extends Component {
   constructor(props){
     super(props)
     this.state ={
      selectedOption: null,
+     modalIsOpen: false,
+     delete: false
    }
+   this.openModal = this.openModal.bind(this);
+   this.closeModal = this.closeModal.bind(this);
+  }
+
+  openModal(string) {
+    if(string === 'delete') this.setState({modalIsOpen: true, delete: true});
+    else this.setState({modalIsOpen: true, delete: false});
+  }
+
+  closeModal() {
+    this.setState({modalIsOpen: false});
   }
   render() {
     // want to setState to the active value
@@ -50,7 +76,7 @@ class Menu extends Component {
         if(selectedOption.value === 'all'){
           this.props.getAllRegions(this.props.publicKey, this.props.privateKey);
         } else{
-          this.props.getAWSInstances(selectedOption.value);
+          this.props.getAWSInstances(selectedOption.value, this.props.publicKey, this.props.privateKey);
         }
       }
     };
@@ -59,7 +85,7 @@ class Menu extends Component {
         if(this.props.currentRegion === 'all'){
           this.props.getAllRegions(this.props.publicKey, this.props.privateKey);
         }
-        else this.props.getAWSInstances(this.props.currentRegion);
+        else this.props.getAWSInstances(this.props.currentRegion, this.props.publicKey, this.props.privateKey);
       }
     };
      // Log out--  notifies main.js about change and changes action 
@@ -80,6 +106,12 @@ class Menu extends Component {
           <h4>Choose a region:</h4>
           <Select id='select-menu' value={this.state.selectedOption} onChange={handleChange} options={options}/>
           <button id="refresh" onClick={refresh}><img id="refreshimg" src="../src/assets/refresh.png"/></button> 
+          <Modal isOpen={this.state.modalIsOpen} onRequestClose={this.closeModal} style={customStyles} contentLabel="Instance Modal">
+            <InstanceCreator delete={this.state.delete} activeNode={this.props.activeNode} onRequestClose={this.closeModal}/>
+            <button onClick={this.closeModal}>close</button>
+          </Modal>
+          <button id='deleteInstance' onClick={(e)=>{this.openModal('delete')}}>Delete</button>
+          <button id='createInstance' onClick={(e)=>{this.openModal('create')}}>Launch</button>
         </div>
       </div>
     );
