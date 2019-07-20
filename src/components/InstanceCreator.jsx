@@ -78,6 +78,11 @@ class InstanceCreator extends Component {
 event.preventDefault();
 }
   deleteInstance() {
+    let nodeRegion = this.props.activeNode.Placement.AvailabilityZone;
+    let regionArr = nodeRegion.split('');
+    regionArr.pop();
+    let regionStr = regionArr.join('');
+    console.log(regionStr);
     console.log(this.source.value);
     console.log(this.props.activeNode);
     let instanceId = this.source.value;
@@ -98,7 +103,7 @@ event.preventDefault();
       })
     }
     function deleteSG(){ return new Promise((resolve, reject)=>{
-      let ec2 = new AWS.EC2();
+      let ec2 = new AWS.EC2({region:regionStr});
       let paramsSG = {
        GroupId: `${activeNode.SecurityGroups[0].GroupId}`
       }
@@ -116,7 +121,7 @@ event.preventDefault();
     let params = {
       InstanceIds: [`${instanceId}`],
     }
-    let ec2 = new AWS.EC2();
+    let ec2 = new AWS.EC2({region:regionStr});
 
     function deleteEC2(){return new Promise((resolve,reject)=>{
       ec2.terminateInstances(params, function (err, data) {
@@ -148,7 +153,7 @@ event.preventDefault();
         DBInstanceIdentifier: `${instanceId}`,
         SkipFinalSnapshot: true
       };
-      let rds = new AWS.RDS();
+      let rds = new AWS.RDS({region:regionStr});
       function deleteRDS(){ return new Promise((resolve, reject)=>{
         rds.deleteDBInstance(params, function(err, data) {
           if (err){
