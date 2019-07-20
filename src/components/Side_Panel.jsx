@@ -1,8 +1,8 @@
-import React, { Component } from "react";
-import ReactJson from "react-json-view";
-import SecGroupEdit from "./Security_Group_Edit";
-import Modal from "react-modal";
-import Collapsible from "react-collapsible";
+import React, {Component} from 'react';
+import ReactJson from 'react-json-view';
+import SecGroupEdit from './Security_Group_Edit';
+import Modal from 'react-modal';
+import Collapsible from 'react-collapsible';
 // import {Switch, BrowserRouter as Router, Route, NavLink, withRouter } from 'react-router-dom';
 import Delete from "react-collapsible";
 
@@ -33,7 +33,7 @@ class Side_Panel extends Component {
   }
 
   delete() {
-    this.setState({ delete: true });
+    this.setState({delete: true});
   }
 
   openModal() {
@@ -77,12 +77,12 @@ class Side_Panel extends Component {
 
     if (Object.keys(this.props.activeNode).length > 0) {
       const reactJsonconfig = {
-        indentWidth: 1,
-        name: this.props.activeNode.InstanceId,
+        indentWidth:1,
+        name:this.props.activeNode.InstanceId,
         theme: "bright:inverted",
-        iconStyle: "square",
-        displayObjectSize: false,
-        displayDataTypes: false
+        iconStyle:"square",
+        displayObjectSize:false,
+        displayDataTypes:false
       };
       let securityGroupNames;
       if (this.props.activeNode.MySecurityGroups) {
@@ -125,17 +125,13 @@ class Side_Panel extends Component {
             <p>
               <span className="sidebar-title">Instance ID: </span>
               <span>
-                {this.props.activeNode.InstanceId
-                  ? this.props.activeNode.InstanceId
-                  : this.props.activeNode.DBInstanceIdentifier}
+                {this.props.activeNode.InstanceId ? this.props.activeNode.InstanceId : this.props.activeNode.DBInstanceIdentifier}
               </span>
             </p>
             <p>
               <span className="sidebar-title">Instance Status: </span>
               <span>
-                {this.props.activeNode.InstanceId
-                  ? this.props.activeNode.State.Name
-                  : this.props.activeNode.DBInstanceStatus}
+                {this.props.activeNode.InstanceId ? this.props.activeNode.State.Name : this.props.activeNode.DBInstanceStatus}
               </span>
             </p>
             <p>
@@ -156,15 +152,7 @@ class Side_Panel extends Component {
           </Collapsible>
           <Collapsible trigger="Node Details" open="true">
             <div id="main-info" className="node-info">
-              <ReactJson
-                src={nodeData}
-                name={"Active Node"}
-                theme={reactJsonconfig.theme}
-                indentWidth={reactJsonconfig.indentWidth}
-                iconStyle={reactJsonconfig.iconStyle}
-                displayObjectSize={reactJsonconfig.displayObjectSize}
-                displayDataTypes={reactJsonconfig.displayDataTypes}
-              />
+              <ReactJson src={nodeData} name={"Active Node"} theme={reactJsonconfig.theme}indentWidth={reactJsonconfig.indentWidth} iconStyle={reactJsonconfig.iconStyle} displayObjectSize={reactJsonconfig.displayObjectSize} displayDataTypes={reactJsonconfig.displayDataTypes}/>
             </div>
           </Collapsible>
         </div>
@@ -182,18 +170,8 @@ class Side_Panel extends Component {
     return (
       <div id="sidePanel">
         {sidePanelWelcome}
-        <Modal
-          isOpen={this.state.modalIsOpen}
-          onAfterOpen={this.afterOpenModal}
-          onRequestClose={this.closeModal}
-          style={customStyles}
-          contentLabel="Example Modal"
-        >
-          <SecGroupEdit
-            sgData={this.props.activeNode.MySecurityGroups}
-            onRequestClose={this.closeModal}
-            delete={this.state.delete}
-          />
+        <Modal isOpen={this.state.modalIsOpen} onAfterOpen={this.afterOpenModal} onRequestClose={this.closeModal} style={customStyles} contentLabel="Example Modal">
+          <SecGroupEdit sgData={this.props.activeNode.MySecurityGroups} onRequestClose={this.closeModal} delete={this.state.delete}/>
           <button onClick={this.closeModal}>Close</button>
         </Modal>
         {NodeDetails}

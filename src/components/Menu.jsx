@@ -60,14 +60,15 @@ class Menu extends Component {
           { value:'ap-northeast-1', label: 'Asia Pacific (Tokyo)' },
           { value:'ca-central-1', label: 'Canada (Central)' },
           { value:'cn-north-1', label: 'China (Beijing)' },
-          { value:'cn-northwest-1', label: 'China (Beijing)' },
+          { value:'cn-northwest-1', label: 'China (Ningxia)' }, // beijing to ningxia => was 2 beijings
           { value:'eu-central-1', label: 'EU (Frankfurt)' },
           { value:'eu-west-1', label: 'EU (Ireland)' },
           { value:'eu-west-2', label: 'EU (London)' },
           { value:'eu-west-3', label: 'EU (Paris)' },
           { value:'eu-north-1', label: 'EU (Stockholm)' },
-          { value:'sa-east-1', label: 'South America (São Paulo)' }
-    ];
+          { value:'sa-east-1', label: 'South America (São Paulo)' },
+          // { value:'ap-east-1', label: 'Asia Pacific (Hong Kong)' },     // Hong Gong is not here    
+        ];
 
     const handleChange = (selectedOption) => {
       this.setState({ selectedOption })
@@ -76,7 +77,7 @@ class Menu extends Component {
         if(selectedOption.value === 'all'){
           this.props.getAllRegions(this.props.publicKey, this.props.privateKey);
         } else{
-          this.props.getAWSInstances(selectedOption.value);
+          this.props.getAWSInstances(selectedOption.value, this.props.publicKey, this.props.privateKey);
         }
       }
     };
@@ -110,8 +111,8 @@ class Menu extends Component {
             <InstanceCreator delete={this.state.delete} selectedRegion={this.state.selectedOption} activeNode={this.props.activeNode} onRequestClose={this.closeModal}/>
             <button onClick={this.closeModal}>close</button>
           </Modal>
-          <button id='deleteInstance' onClick={(e)=>{this.openModal('delete')}}>Delete Instance</button>
           <button id='createInstance' onClick={(e)=>{this.openModal('create')}}>Launch Instance</button>
+          <button id='deleteInstance' onClick={(e)=>{this.openModal('delete')}}>Delete Instance</button>
         </div>
       </div>
     );

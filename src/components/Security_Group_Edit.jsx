@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, {Component} from 'react';
 
 const AWS = require("aws-sdk");
 
@@ -18,9 +18,9 @@ class Security_Group_Edit extends Component {
     this.checkSource = this.checkSource.bind(this);
   }
 
-  getSgTotal() {
+  getSgTotal(){
     console.log("this is sgData from getSgTotal", this.props.sgData);
-    const { sgData } = this.props;
+    const {sgData} = this.props;
     const groupIds = [];
     for (let i = 0; i < sgData.length; i++) {
       groupIds.push(
@@ -56,8 +56,7 @@ class Security_Group_Edit extends Component {
   // }
 
   checkSource(input) {
-    const cidrRegex =
-      "^([0-9]{1,3}.){3}[0-9]{1,3}(/([0-9]|[1-2][0-9]|3[0-2]))?$";
+    const cidrRegex ="^([0-9]{1,3}.){3}[0-9]{1,3}(/([0-9]|[1-2][0-9]|3[0-2]))?$";
     if (input.match(cidrRegex)) return true;
   }
 
@@ -69,7 +68,7 @@ class Security_Group_Edit extends Component {
       toPort = 65535;
     } else {
       ranges = this.portRange.value.split("-");
-      toPort = ranges.length > 1 ? ranges[1] : ranges[0];
+      toPort = ranges.length > 1 ? ranges[1]:ranges[0];
     }
     // async call to do get the api, then refresh
     console.log("type of ", typeof this.source.value);
@@ -77,20 +76,20 @@ class Security_Group_Edit extends Component {
     const paramsIn = {
       GroupId: this.GroupId.value, //selected node
       IpPermissions: [
-        {
-          FromPort: ranges[0],
-          IpProtocol: this.protocol.value,
-          ToPort: toPort
-        }
+      {
+        FromPort: ranges[0],
+        IpProtocol: this.protocol.value,
+        ToPort: toPort
+      }
       ]
     };
-    const paramsOut = {
+      const paramsOut = {
       GroupId: this.source.value, //inputted source
       IpPermissions: [
         {
-          FromPort: ranges[0],
-          IpProtocol: this.protocol.value,
-          ToPort: toPort
+        FromPort: ranges[0],
+        IpProtocol: this.protocol.value,
+        ToPort: toPort
         }
       ]
     };
@@ -139,14 +138,14 @@ class Security_Group_Edit extends Component {
         });
       });
     }
-    function editSGPromisesOut() {
-      return new Promise((resolve, reject) => {
+    function editSGPromisesOut(){
+      return new Promise((resolve, reject)=>{
         ec2.authorizeSecurityGroupEgress(paramsOut, function(err, data) {
           if (err) {
             console.log("Data not inputted in correct format", err, err.stack); // an error occurred
             reject(err);
           }
-          resolve();
+          resolve(); 
         });
       });
     }
@@ -166,7 +165,7 @@ class Security_Group_Edit extends Component {
     function revokeSGPromisesOut() {
       return new Promise((resolve, reject) => {
         ec2.revokeSecurityGroupEgress(paramsOut, function(err, data) {
-          if (err) {
+          if(err){
             console.log(err, err.stack);
             reject(err);
           } // an error occurred
@@ -174,8 +173,8 @@ class Security_Group_Edit extends Component {
         });
       });
     }
-    if (!this.props.delete) {
-      if (this.state.inbound) {
+    if(!this.props.delete) {
+      if(this.state.inbound) {
         editSGPromisesIn()
           .then(result => {
             this.props.onRequestClose();
@@ -434,11 +433,7 @@ class Security_Group_Edit extends Component {
     return (
       <div id="modal-table">
         <form onSubmit={this.handleSubmit}>
-          {!this.props.delete ? (
-            <h2> Edit Inbound and Outbound Security Groups</h2>
-          ) : (
-            <h2>Delete Security Rules</h2>
-          )}
+          {!this.props.delete ? (<h2> Edit Inbound and Outbound Security Groups</h2>) : (<h2>Delete Security Rules</h2>)}
           <table>
             <tr>
               <th>Inbound: </th>
@@ -447,19 +442,11 @@ class Security_Group_Edit extends Component {
               <th>Outbound: </th>
             </tr>
             <tr>
-              <th>
-                {this.getSgTotal()}
-              </th>
-              <th>
-                <h2>{"<-----"}</h2>
-              </th>
+              <th>{this.getSgTotal()}</th>
+              <th><h2>{"<-----"}</h2></th>
               <th />
               <th>
-                <input
-                  id="Source"
-                  type="text"
-                  ref={input => (this.source = input)}
-                />
+                <input id="Source" type="text" ref={input => (this.source = input)}/>
                 <select>
                   <option value="Custom">Custom</option>
                   <option value="Anywhere">Anywhere</option>
@@ -476,35 +463,10 @@ class Security_Group_Edit extends Component {
               <th>Description</th>
             </tr>
             <tr>
-              <th>
-                <select onChange={this.handleChange}>{AutoFillArray}</select>
-              </th>
-              <th>
-                {" "}
-                <input
-                  id="protocol"
-                  type="text"
-                  value={AutofillData[this.state.index].Protocol}
-                  ref={input => (this.protocol = input)}
-                />
-              </th>
-              <th>
-                {" "}
-                <input
-                  id="portRange"
-                  type="text"
-                  defaultValue={AutofillData[this.state.index].PortRange}
-                  ref={input => (this.portRange = input)}
-                />
-              </th>
-              <th>
-                {" "}
-                <input
-                  id="Description"
-                  type="text"
-                  ref={input => (this.description = input)}
-                />
-              </th>
+              <th><select onChange={this.handleChange}>{AutoFillArray}</select></th>
+              <th><input id="protocol" type="text" value={AutofillData[this.state.index].Protocol} ref={input => (this.protocol = input)}/></th>
+              <th><input id="portRange" type="text" defaultValue={AutofillData[this.state.index].PortRange} ref={input => (this.portRange = input)}/></th>
+              <th><input id="Description" type="text" ref={input => (this.description = input)}/></th>
             </tr>
           </table>
           <input type="submit" value="Submit" />
