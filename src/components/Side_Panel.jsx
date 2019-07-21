@@ -37,7 +37,7 @@ class Side_Panel extends Component {
   }
 
   openModal() {
-    this.setState({ modalIsOpen: true });
+    this.setState({modalIsOpen: true});
   }
 
   afterOpenModal() {

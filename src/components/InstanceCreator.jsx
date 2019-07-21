@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 const AWS = require("aws-sdk");
-// let sg = String( Math.floor(Math.random()) * 2000);
 
 const imageId = { 
 		"us-east-2": "ami-0d8f6eb4f641ef691",
@@ -73,13 +72,11 @@ class InstanceCreator extends Component {
 		console.log("HERE IS CURRENT REGION=>", AWS.config.region)		
 	}
 	handleSubmit() {
-		// 		// functionality for creating rds
-		//configure region
 		const ec2 = new AWS.EC2();
 		const rds = new AWS.RDS();
 		let sg = this.state.sg;
 		if (this.state.value === "RDS") {
-			console.log("IMMMHEREEE from rds", this.state.instance);
+			// console.log("IMMMHEREEE from rds", this.state.instance);
 			const params = {
 				DBInstanceClass: 'db.t2.micro', /* required */
 				DBInstanceIdentifier: 'mydbinstance', /* required */
@@ -137,7 +134,6 @@ class InstanceCreator extends Component {
 					})
 				})
 			};
-			
 			createSecurityGroup(sg)
 			// .catch(err=>console.log("Group name already exists",err) 
 			.then(() => {
@@ -262,12 +258,12 @@ if(this.type.value === 'EC2'){
           <option value="EC2">EC2</option>
           <option value="RDS">RDS</option>
         </select>
-        <select id="instanceType">
+        {/* <select id="instanceType">
           <option value="">Instance Type 1</option>
           <option value="">Instance Type 2</option>
           <option value="">Instance Type 3</option>
         </select>
-        <br />
+        <br /> */}
 		<input type="text" defaultValue={imageId[AWS.config.region]} onChange={e => this.changeRegion(e)} />
 		<br />
         <button onClick={this.handleSubmit}>Create Instance</button>
