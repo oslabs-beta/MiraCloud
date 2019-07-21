@@ -8,7 +8,7 @@
     "test:watch": "npm test -- --watch",
     "build": "webpack --mode production",
     "dev": "webpack --mode development",
-    "start": "npm run build && electron .",
+    "start": "electron .",
     "package-mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --icon=src/assets/logo.icns --prune=true --out=release-builds",
     "package-win": "electron-packager . Mira --overwrite --asar=true --platform=win32 --arch=ia32 --icon=src/assets/logo.ico --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"Electron Tutorial App\"",
     "package-linux": "electron-packager . Mira --overwrite --asar=true --platform=linux --arch=x64 --icon=src/assets/logo.png --prune=true --out=release-builds"

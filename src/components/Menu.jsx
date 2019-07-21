@@ -60,15 +60,14 @@ class Menu extends Component {
           { value:'ap-northeast-1', label: 'Asia Pacific (Tokyo)' },
           { value:'ca-central-1', label: 'Canada (Central)' },
           { value:'cn-north-1', label: 'China (Beijing)' },
-          { value:'cn-northwest-1', label: 'China (Ningxia)' }, // beijing to ningxia => was 2 beijings
+          { value:'cn-northwest-1', label: 'China (Beijing)' },
           { value:'eu-central-1', label: 'EU (Frankfurt)' },
           { value:'eu-west-1', label: 'EU (Ireland)' },
           { value:'eu-west-2', label: 'EU (London)' },
           { value:'eu-west-3', label: 'EU (Paris)' },
           { value:'eu-north-1', label: 'EU (Stockholm)' },
-          { value:'sa-east-1', label: 'South America (São Paulo)' },
-          // { value:'ap-east-1', label: 'Asia Pacific (Hong Kong)' },     // Hong Gong is not here    
-        ];
+          { value:'sa-east-1', label: 'South America (São Paulo)' }
+    ];
 
     const handleChange = (selectedOption) => {
       this.setState({ selectedOption })
@@ -108,11 +107,11 @@ class Menu extends Component {
           <Select id='select-menu' value={this.state.selectedOption} onChange={handleChange} options={options}/>
           <button id="refresh" onClick={refresh}><img id="refreshimg" src="../src/assets/refresh.png"/></button> 
           <Modal isOpen={this.state.modalIsOpen} onRequestClose={this.closeModal} style={customStyles} contentLabel="Instance Modal">
-            <InstanceCreator delete={this.state.delete} selectedRegion={this.state.selectedOption} activeNode={this.props.activeNode} onRequestClose={this.closeModal}/>
+            <InstanceCreator delete={this.state.delete} activeNode={this.props.activeNode} onRequestClose={this.closeModal}/>
             <button onClick={this.closeModal}>close</button>
           </Modal>
-          <button id='createInstance' onClick={(e)=>{this.openModal('create')}}>Launch Instance</button>
-          <button id='deleteInstance' onClick={(e)=>{this.openModal('delete')}}>Delete Instance</button>
+          <button id='deleteInstance' onClick={(e)=>{this.openModal('delete')}}>Delete</button>
+          <button id='createInstance' onClick={(e)=>{this.openModal('create')}}>Launch</button>
         </div>
       </div>
     );
