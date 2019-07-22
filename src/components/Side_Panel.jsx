@@ -4,7 +4,6 @@ import SecGroupEdit from './Security_Group_Edit';
 import Modal from 'react-modal';
 import Collapsible from 'react-collapsible';
 // import {Switch, BrowserRouter as Router, Route, NavLink, withRouter } from 'react-router-dom';
-import Delete from "react-collapsible";
 
 const customStyles = {
   content: {
@@ -79,8 +78,8 @@ class Side_Panel extends Component {
       const reactJsonconfig = {
         indentWidth:1,
         name:this.props.activeNode.InstanceId,
-        theme: "bright:inverted",
-        iconStyle:"square",
+        theme: "monokai",
+        iconStyle:"circle",
         displayObjectSize:false,
         displayDataTypes:false
       };
@@ -89,11 +88,23 @@ class Side_Panel extends Component {
         securityGroupNames = this.analyzeSecurityGroups(
           this.props.activeNode.MySecurityGroups
         );
+        console.log('SECURITY GROPU NAMES', securityGroupNames);
       }
-      let nodeData = {
-        "Node Details": this.props.activeNode,
-        "Security Group Details": this.props.activeNode.MySecurityGroups
-      };
+      let nodeData;
+      if (this.props.activeNode.MySecurityGroups) {
+        nodeData = {
+          "Node Details": this.props.activeNode,
+          "Security Group Details": this.props.activeNode.MySecurityGroups
+        };
+      } else {
+        nodeData = {
+          "Node Details": this.props.activeNode
+        }
+      }
+      // let nodeData = {
+      //   "Node Details": this.props.activeNode,
+      //   "Security Group Details": this.props.activeNode.MySecurityGroups
+      // };
       // console.log("fdsjfdhsjk", securityGroupNames);
       sgmodal = (
         <button id="modal-pop-up" onClick={this.openModal}>
@@ -101,6 +112,36 @@ class Side_Panel extends Component {
         </button>
       );
       console.log(this.props.activeNode);
+      let sgDetails = [];
+      if (securityGroupNames){
+        sgDetails.push(
+        <div>
+        <p>
+          <span className="sidebar-title">Security Groups: </span>
+          <span>
+            {securityGroupNames.names.join(", ")}
+            {securityGroupNames.ids.join(", ")}
+          </span>
+        </p>
+        <p>
+          <span className="sidebar-title">Inbounds: </span>
+          <span>{securityGroupNames.ids.join(", ")}</span>
+        </p>
+        <p>
+          <span className="sidebar-title">Outbounds: </span>
+          <span>{securityGroupNames.ids.join(", ")}</span>
+        </p>
+        </div>
+        )
+      }
+      let InstanceTypeDisplay;
+      if(this.props.activeNode.InstanceId){
+        InstanceTypeDisplay = "EC2";
+      } else if (this.props.activeNode.DBInstanceStatus){
+        InstanceTypeDisplay = "RDS";
+      } else if (this.props.activeNode.get_region_s3){
+        InstanceTypeDisplay = "S3";
+      }
       NodeDetails = (
         <div id="details-wrapper">
           <Collapsible trigger="Node Summary" open="true">
@@ -120,7 +161,8 @@ class Side_Panel extends Component {
             </button>
             <p>
               <span className="sidebar-title">Instance Type: </span>
-              <span>{this.props.activeNode.InstanceId ? "EC2" : "RDS"}</span>
+              <span>{InstanceTypeDisplay}</span>
+              {console.log("INSTANCE ID", this.props.activeNode)}
             </p>
             <p>
               <span className="sidebar-title">Instance ID: </span>
@@ -134,21 +176,7 @@ class Side_Panel extends Component {
                 {this.props.activeNode.InstanceId ? this.props.activeNode.State.Name : this.props.activeNode.DBInstanceStatus}
               </span>
             </p>
-            <p>
-              <span className="sidebar-title">Security Groups: </span>
-              <span>
-                {securityGroupNames.names.join(", ")}
-                {securityGroupNames.ids.join(", ")}
-              </span>
-            </p>
-            <p>
-              <span className="sidebar-title">Inbounds: </span>
-              <span>{securityGroupNames.ids.join(", ")}</span>
-            </p>
-            <p>
-              <span className="sidebar-title">Outbounds: </span>
-              <span>{securityGroupNames.ids.join(", ")}</span>
-            </p>
+            {/* {sgDetails} */}
           </Collapsible>
           <Collapsible trigger="Node Details" open="true">
             <div id="main-info" className="node-info">
