@@ -34,6 +34,7 @@ class Menu extends Component {
    this.openModal = this.openModal.bind(this);
    this.closeModal = this.closeModal.bind(this);
   }
+  
 
   openModal(string) {
     if(string === 'delete') this.setState({modalIsOpen: true, delete: true});
@@ -95,6 +96,8 @@ class Menu extends Component {
        this.props.logOut()
     }
 
+    
+
     return (
       <div id="Menu">
         <div id='top-menu'>
@@ -107,12 +110,14 @@ class Menu extends Component {
           <Select id='select-menu' value={this.state.selectedOption} onChange={handleChange} options={options}/>
           <button id="refresh" onClick={refresh}><img id="refreshimg" src="../src/assets/refresh.png"/></button> 
           <Modal isOpen={this.state.modalIsOpen} onRequestClose={this.closeModal} style={customStyles} contentLabel="Instance Modal">
-            <InstanceCreator delete={this.state.delete} activeNode={this.props.activeNode} onRequestClose={this.closeModal}/>
             <button onClick={this.closeModal}>close</button>
           </Modal>
-          <button id='deleteInstance' onClick={(e)=>{this.openModal('delete')}}>Delete</button>
-          <button id='createInstance' onClick={(e)=>{this.openModal('create')}}>Launch</button>
+          <button id='createInstance' onClick={(e)=>{this.openModal('create')}}>Launch EC2 Instance</button>
+          <button id='deleteInstance' onClick={(e)=>{this.openModal('delete')}}>Delete Instance</button>
+          {/* <button style={{backgroundColor:"green"}} onClick={this.start}> Start Instance</button> */}
+          {/* <button style={{backgroundColor:"red"}} onClick={this.stop}> Stop instance</button> */}
         </div>
+        <InstanceCreator delete={this.state.delete} selectedRegion={this.state.selectedOption} activeNode={this.props.activeNode} onRequestClose={this.closeModal}/>
       </div>
     );
   }
