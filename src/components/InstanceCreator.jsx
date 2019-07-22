@@ -67,11 +67,11 @@ class InstanceCreator extends Component {
 	
 	change(event) {
 		this.setState({ value: event.target.value });
-		if (this.props.selectedRegion.value === "all" || this.state.inputRegion !== null) AWS.config.update({region: inAllRegions[this.state.inputRegion]})
-		else AWS.config.update({ region: this.props.selectedRegion.value }); //updates arguments region, maxRetries, logger
 		console.log("HERE IS CURRENT REGION=>", AWS.config.region)		
 	}
 	handleSubmit() {
+		if (this.props.selectedRegion.value === "all" || this.state.inputRegion !== null) AWS.config.update({region: inAllRegions[this.state.inputRegion]})
+		else AWS.config.update({ region: this.props.selectedRegion.value }); //updates arguments region, maxRetries, logger
 		const ec2 = new AWS.EC2();
 		const rds = new AWS.RDS();
 		let sg = this.state.sg;
@@ -140,7 +140,10 @@ class InstanceCreator extends Component {
 				console.log("SECURITY GROUP HAS BEEN CREATED")
 				createEC2Instance()
 			})
-			.then(data => console.log(data))
+			.then(data => {
+				console.log(data); 
+				this.props.onRequestClose();
+			})
 			.catch(err => console.log(err))
 			
 			event.preventDefault();
@@ -256,21 +259,26 @@ class InstanceCreator extends Component {
   }
 
   render(){
+	  let imgOptions = [];
+	  for(let key in inAllRegions){
+		  console.log('key', key);
+		  imgOptions.push(<option value={key}>{inAllRegions[key]}</option>)
+	  }
+	  console.log('options:', imgOptions);
     // console.log('active node: ', this.props.activeNode);
   		let displayCreate = [<form>
         <div>Create New Instances</div>
         <select id="instance" onChange={this.change} value={this.state.value}>
           <option value="select">Select Instance</option>
           <option value="EC2">EC2</option>
-          <option value="RDS">RDS</option>
         </select>
-        {/* <select id="instanceType">
-          <option value="">Instance Type 1</option>
-          <option value="">Instance Type 2</option>
-          <option value="">Instance Type 3</option>
-        </select>
-        <br /> */}
-		<input type="text" defaultValue={imageId[AWS.config.region]} onChange={e => this.changeRegion(e)} />
+		<p>Region Image Id:</p>
+		<select id='select-img' defaultValue={imageId[AWS.config.region]} onChange={e => this.changeRegion(e)}>
+			{imgOptions}
+		</select>
+		<br />
+		<p>Key Pair Name:</p>
+		<input type="text" ref={input => (this.keyPair = input)}/>
 		<br />
         <button onClick={this.handleSubmit}>Create Instance</button>
       </form>];
