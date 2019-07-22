@@ -95,29 +95,33 @@ class Side_Panel extends Component {
         "Security Group Details": this.props.activeNode.MySecurityGroups
       };
       // console.log("fdsjfdhsjk", securityGroupNames);
-      sgmodal = (
-        <button id="modal-pop-up" onClick={this.openModal}>
-          Edit Security Groups
+      if(this.props.currentRegion !== 'all') {
+        sgmodal =(
+          <div>
+          <button id="modal-pop-up" onClick={this.openModal}>
+            Add SG Rules
+          </button>
+          <button
+          id="deleteBtn"
+          onClick={() => {
+            // console.log(
+            //   "this is current delete statement =>",
+            //   this.state.delete
+            // );
+            this.delete();
+            this.openModal();
+          }}
+        >
+          Delete SG rules
         </button>
-      );
+        </div>
+        );
+     }
       console.log(this.props.activeNode);
       NodeDetails = (
         <div id="details-wrapper">
           <Collapsible trigger="Node Summary" open="true">
             {sgmodal}
-            <button
-              id="deleteBtn"
-              onClick={() => {
-                // console.log(
-                //   "this is current delete statement =>",
-                //   this.state.delete
-                // );
-                this.delete();
-                this.openModal();
-              }}
-            >
-              Delete SG rules
-            </button>
             <p>
               <span className="sidebar-title">Instance Type: </span>
               <span>{this.props.activeNode.InstanceId ? "EC2" : "RDS"}</span>
