@@ -23,7 +23,6 @@ class Cyto extends PureComponent {
         this.state = {
             regions: new Set(),
             nodes: {},
-            cssCounter: 0
         };
     }
     // function call to render a cytoscape object (entire graph)
@@ -125,8 +124,6 @@ class Cyto extends PureComponent {
                 .css({
                     'border-color': '#D69BFF' // change selected border color
                 })
-       
-
         });
         /**
          *  VPCs just pass in the id
@@ -138,7 +135,6 @@ class Cyto extends PureComponent {
         this.cy.on('tap', 'node', function (evt) {
             getNodeFunction(getStateNodes[this.id()]);
         })
-
 
     }
     // invokes the function to create object
