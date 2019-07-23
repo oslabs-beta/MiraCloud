@@ -180,6 +180,34 @@ class compileGraphData {
         console.log('S3 IN FILE COMPILEGRAPHDATA', this.regionState);
     }
 
+    compileLambdaData(data, region){
+        return new Promise((resolve, reject) => {
+           for(let key in data){
+               let functionArr = data[key];
+               for(let i = 0; i < functionArr.length; i++){
+                   if(functionArr[i].VpcConfig){ 
+                    let lambdaVpc = functionArr[i].VpcConfig.VpcId;
+                    if((!this.regionState[lambdaVpc])) this.regionState[lambdaVpc] = {};
+                    else if(!this.regionState[lambdaVpc]['Lambda']) this.regionState[lambdaVpc]['Lambda'] = {}
+                    this.regionState[lambdaVpc]['Lambda'][functionArr[i].FunctionName] = functionArr[i];
+                   }
+                   else{
+                     for(let VPC in this.regionState){
+                         for(let az in this.regionState[VPC]){
+                             let azStr = az.slice(0, az.length-1);
+                             if(azStr === region){
+                                 if(!this.regionState[VPC]['Lambda'])this.regionState[VPC]['Lambda'] = {};
+                                 this.regionState[VPC]['Lambda'][functionArr[i].FunctionName] = functionArr[i];
+                             }
+                         }
+                     }  
+                   }
+               }
+           }
+        resolve();
+        })
+    }
+
     // createEdges() {
     //     console.log("sgnodre correlations", this.sgNodeCorrelations);
     //     console.log("sgRelationshisps ", this.sgRelationships)

@@ -6,6 +6,8 @@ import EC2 from './EC2'
 import VPC from './VPC'
 import RDS from './RDS'
 import S3 from './S3'
+import Lambda from './Lambda'
+
 import Region from './Region'
 import AvailabilityZone from './AvailabilityZone'
 // gives look/feel; type of graph
@@ -104,6 +106,18 @@ class Cyto extends PureComponent {
                     'text-margin-y': 5,
                     'background-height': '50px'
                 })
+                //lambda
+                .selector('.Lambda')
+                .css({
+                    'background-opacity':0,
+                    'background-image':'https://cdn.freebiesupply.com/logos/large/2x/aws-lambda-logo-png-transparent.png',
+                    'background-width-relative-to': 'inner',
+                    'background-height-relative-to': 'inner',
+                    'text-valign': 'bottom',
+                    'background-width': '50px',
+                    'text-margin-y': 5,
+                    'background-height': '50px'
+                })
                 .selector('.stopped')
                 .css({
                     'border-color': '#f77171',
@@ -116,6 +130,14 @@ class Cyto extends PureComponent {
                 .css({
                     'border-style': 'dotted'
                 })
+                .selector('.Active')
+                .css({
+                    'border-color': '#8bf771',
+                })
+                .selector('.Passthrough')
+                .css({
+                    'border-color': '#f77171',
+                })
 
         });
         /**
@@ -126,11 +148,7 @@ class Cyto extends PureComponent {
          */
         //check to see if you can access parent of the current node to pass into function
         this.cy.on('tap', 'node', function (evt) {
-            console.log('GET STATE NODES', getStateNodes);
-            console.log('this.id', this.id());
-            
-                getNodeFunction(getStateNodes[this.id()]);
-            
+            getNodeFunction(getStateNodes[this.id()]);
         })
     }
     // invokes the function to create object
@@ -156,7 +174,6 @@ class Cyto extends PureComponent {
         // iterate through everything in state to gather VPC, availability zone, EC2 and RDS instances and creating nodes for each
         for (let vpc in this.props.regionData) {
             let vpcObj = this.props.regionData[vpc];
-            console.log('VPCVPC VPC', vpc, 'regionData', this.props.regionData);
             
             if (vpcObj.hasOwnProperty("region") && !this.state.regions.has(vpcObj.region)) {
                 this.cy.add(new Region(vpcObj.region).getRegionObject());
@@ -166,8 +183,7 @@ class Cyto extends PureComponent {
             this.cy.add(new VPC(vpc, vpcObj.region).getVPCObject());
 
             for (let az in vpcObj) {
-                console.log('AZONEEE', az);
-                if (az !== "region" && az !== "S3" && az !== "S3Data") this.cy.add(new AvailabilityZone(az, vpcObj.region + "-" + vpc).getAvailabilityZoneObject());
+                if (az !== "region" && az !== "S3" && az !== "S3Data" && az!=='Lambda') this.cy.add(new AvailabilityZone(az, vpcObj.region + "-" + vpc).getAvailabilityZoneObject());
                 // EC2 instance
                 let ec2Instances = vpcObj[az].EC2;
                 for (let ec2s in ec2Instances) {
@@ -205,6 +221,14 @@ class Cyto extends PureComponent {
                     console.log('V P C', vpc);
                     this.state.nodes[s3Instances[i]] = [s3Instances[i], "S3", vpcObj.region, vpc];
 
+                }
+            }
+            let lambdaInstances = vpcObj.Lambda;
+            if(lambdaInstances){
+                for(let func in lambdaInstances){
+                    // console.log('from cyto data in lambda:', lambdaInstances[func]['TracingConfig']);
+                    this.cy.add(new Lambda(lambdaInstances[func], vpcObj.region + '-' + vpc).getLambdaObject());
+                    this.state.nodes[lambdaInstances[func]] = [lambdaInstances[func], 'Lambda', vpcObj.region, vpc];
                 }
             }
         }

@@ -543,6 +543,56 @@ export const getAllRegions = (publicKey, privateKey) => {
                   ...GetBucketLocationData
                 }
             }
+            lambda {
+              us_west_1_lambda: listFunctions(config:{region: "us-west-1"}){
+                ...listallfunctions
+              }
+              us_west_2_lambda: listFunctions(config:{region: "us-west-2"}){
+                ...listallfunctions
+              }
+              us_east_1_lambda: listFunctions(config:{region: "us-east-1"}){
+                ...listallfunctions
+              }
+              us_east_2_lambda: listFunctions(config:{region: "us-east-2"}){
+                ...listallfunctions
+              }
+              ap_south_1_lambda: listFunctions(config:{region: "ap-south-1"}){
+                ...listallfunctions
+              }
+              ap_northeast_1_lambda: listFunctions(config:{region: "ap-northeast-1"}){
+                ...listallfunctions
+              }
+              ap_northeast_2_lambda: listFunctions(config:{region: "ap-northeast-2"}){
+                ...listallfunctions
+              }
+              ap_southeast_1_lambda: listFunctions(config:{region: "ap-southeast-1"}){
+                ...listallfunctions
+              }
+              ap_southeast_2_lambda: listFunctions(config:{region: "ap-southeast-2"}){
+                ...listallfunctions
+              }
+              ca_central_1_lambda: listFunctions(config:{region: "ca-central-1"}){
+                ...listallfunctions
+              }
+              eu_central_1_lambda: listFunctions(config:{region: "eu-central-1"}){
+                ...listallfunctions
+              }
+              eu_west_1_lambda: listFunctions(config:{region: "eu-west-1"}){
+                ...listallfunctions
+              }
+              eu_west_2_lambda: listFunctions(config:{region: "eu-west-2"}){
+                ...listallfunctions
+              }
+              eu_west_3_lambda: listFunctions(config:{region: "eu-west-3"}){
+                ...listallfunctions
+              }
+              eu_north_1_lambda: listFunctions(config:{region: "eu-north-1"}){
+                ...listallfunctions
+              }
+              sa_east_1_lambda: listFunctions(config:{region: "sa-east-1"}){
+                ...listallfunctions
+              }
+            }
           } 
         }    
              
@@ -586,7 +636,29 @@ export const getAllRegions = (publicKey, privateKey) => {
                 Name
                 CreationDate
               }
-            }  
+            } 
+            
+            fragment listallfunctions on AwsLambdaListFunctionsOutput{
+              Functions {
+                FunctionName
+                FunctionArn
+                Role
+                CodeSize
+                Description
+                Timeout
+                MemorySize
+                LastModified
+                Version
+                VpcConfig {
+                  VpcId
+                  SubnetIds
+                  SecurityGroupIds
+                }
+                TracingConfig{
+                  Mode
+                }
+              }
+         }
           
         
         `
@@ -601,6 +673,7 @@ export const getAllRegions = (publicKey, privateKey) => {
       const awsEC2 = aws.ec2;
       const awsRDS = aws.rds;
       const awsS3 = aws.s3;
+      const lambda = aws.lambda;
       console.log('s3', awsS3);
       console.log(awsEC2, awsRDS);
       // recreated this with two for loops, since we have two new objects
@@ -722,6 +795,19 @@ export const getAllRegions = (publicKey, privateKey) => {
         
         }));
       }
+
+      //lambda
+      console.log('original lambda data', lambda);
+      for (let regions in lambda) {
+        const regionArray = regions.split("_")
+        const regionString = regionArray[0] + "-" + regionArray[1] + "-" + regionArray[2];
+        allRegionsPromisesArray.push(new Promise((resolve, reject) => {
+          graphData.compileLambdaData(lambda[regions], regionString)
+          .then(() => resolve())
+          .catch((err)=> reject(err));
+        }));
+      }     
+        
 
       Promise.all(getBucketRegion).then(() => {
         Promise.all(allRegionsPromisesArray).then(() => {
