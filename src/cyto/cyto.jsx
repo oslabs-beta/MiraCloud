@@ -155,7 +155,7 @@ class Cyto extends PureComponent {
          */
         //check to see if you can access parent of the current node to pass into function
         this.cy.on('tap', 'node', function (evt) {
-            getNodeFunction(getStateNodes[this.id()]);
+            getNodeFunction(getStateNodes[`${this.id()}`]);
         })
 
     }
@@ -234,9 +234,9 @@ class Cyto extends PureComponent {
             let lambdaInstances = vpcObj.Lambda;
             if(lambdaInstances){
                 for(let func in lambdaInstances){
-                    // console.log('from cyto data in lambda:', lambdaInstances[func]['TracingConfig']);
+                    console.log('from cyto data in lambda:', vpcObj);
                     this.cy.add(new Lambda(lambdaInstances[func], vpcObj.region + '-' + vpc).getLambdaObject());
-                    this.state.nodes[lambdaInstances[func]] = [lambdaInstances[func], 'Lambda', vpcObj.region, vpc];
+                    this.state.nodes[lambdaInstances[func].FunctionName] = [lambdaInstances[func].FunctionName, 'Lambda', lambdaInstances[func].Region, vpc];
                 }
             }
         }

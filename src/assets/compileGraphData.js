@@ -198,6 +198,7 @@ class compileGraphData {
                              if(azStr === region){
                                  if(!this.regionState[VPC]['Lambda'])this.regionState[VPC]['Lambda'] = {};
                                  this.regionState[VPC]['Lambda'][functionArr[i].FunctionName] = functionArr[i];
+                                 this.regionState[VPC]['Lambda'][functionArr[i].FunctionName].Region = region;
                              }
                          }
                      }  

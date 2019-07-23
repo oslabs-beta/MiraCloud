@@ -681,7 +681,6 @@ export const getAllRegions = (publicKey, privateKey) => {
       // EC2
       for (let regions in awsEC2) {
         const regionArray = regions.split("_")
-        console.log('array of region', regionArray, 'region before split', regions);
         const regionString = regionArray[0] + "-" + regionArray[1] + "-" + regionArray[2];
         // inside this Promise maker, changed the obj(awsEC2), and removed the method it's looking for (.describeInstances)
         // this is because I restructored the object we received, you don't need to look for the describeInstance, awsECs[regions] is the describeInstance

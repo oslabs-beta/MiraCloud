@@ -88,7 +88,6 @@ class Side_Panel extends Component {
         securityGroupNames = this.analyzeSecurityGroups(
           this.props.activeNode.MySecurityGroups
         );
-        console.log('SECURITY GROPU NAMES', securityGroupNames);
       }
       let nodeData;
       if (this.props.activeNode.MySecurityGroups) {
@@ -128,7 +127,6 @@ class Side_Panel extends Component {
         </div>
         );
      }
-      console.log(this.props.activeNode);
       let sgDetails = [];
       if (securityGroupNames){
         sgDetails.push(
@@ -152,12 +150,22 @@ class Side_Panel extends Component {
         )
       }
       let InstanceTypeDisplay;
+      let InstanceIdDisplay;
+      let InstanceStatusDisplay;
       if(this.props.activeNode.InstanceId){
         InstanceTypeDisplay = "EC2";
+        InstanceIdDisplay = this.props.activeNode.InstanceId;
+        InstanceStatusDisplay = this.props.activeNode.State.Name;
       } else if (this.props.activeNode.DBInstanceStatus){
         InstanceTypeDisplay = "RDS";
+        InstanceIdDisplay = this.props.activeNode.DBInstanceIdentifier;
+        InstanceStatusDisplay = this.props.activeNode.DBInstanceStatus;
       } else if (this.props.activeNode.get_region_s3){
         InstanceTypeDisplay = "S3";
+      } else{
+        InstanceTypeDisplay = 'Lambda';
+        InstanceIdDisplay = this.props.activeNode.FunctionName;
+        InstanceStatusDisplay = this.props.activeNode.TracingConfig.Mode;
       }
       NodeDetails = (
         <div id="details-wrapper">
@@ -166,18 +174,17 @@ class Side_Panel extends Component {
             <p>
               <span className="sidebar-title">Instance Type: </span>
               <span>{InstanceTypeDisplay}</span>
-              {console.log("INSTANCE ID", this.props.activeNode)}
             </p>
             <p>
               <span className="sidebar-title">Instance ID: </span>
               <span>
-                {this.props.activeNode.InstanceId ? this.props.activeNode.InstanceId : this.props.activeNode.DBInstanceIdentifier}
+                {InstanceIdDisplay}
               </span>
             </p>
             <p>
               <span className="sidebar-title">Instance Status: </span>
               <span>
-                {this.props.activeNode.InstanceId ? this.props.activeNode.State.Name : this.props.activeNode.DBInstanceStatus}
+                {InstanceStatusDisplay}
               </span>
             </p>
             {/* {sgDetails} */}
