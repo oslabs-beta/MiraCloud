@@ -5,6 +5,7 @@ const {ipcRenderer} = require('electron');
 import * as actions from "../actions/actions.js";
 import Modal from 'react-modal';
 import InstanceCreator from './InstanceCreator.jsx'
+import '../styles/App.scss';
 
 const mapDispatchToProps = dispatch => ({
   logOut: () => {
@@ -98,14 +99,14 @@ class Menu extends Component {
     return (
       <div id="Menu">
         <div id='top-menu'>
-          <img id='small_logo' src="../src/assets/mira3.png" />
+          <img id='small_logo' src="../src/assets/mira_white.png" />
           <button id="logout" onClick={handleLogOut}>Log Out</button>
         </div>
         {/* select component for html in react jsx */}
         <div id='bottom-menu'>
           <h4>Choose a region:</h4>
           <Select id='select-menu' value={this.state.selectedOption} onChange={handleChange} options={options}/>
-          <button id="refresh" onClick={refresh}><img id="refreshimg" src="../src/assets/refresh.png"/></button> 
+          <button id="refresh" onClick={refresh}><img id="refreshimg" src="../src/assets/refresh_1.png"/></button> 
           <Modal isOpen={this.state.modalIsOpen} onRequestClose={this.closeModal} style={customStyles} contentLabel="Instance Modal">
             <InstanceCreator selectedRegion={this.state.selectedOption} delete={this.state.delete} activeNode={this.props.activeNode} onRequestClose={this.closeModal}/>
             <button onClick={this.closeModal}>close</button>

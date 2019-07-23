@@ -1,4 +1,5 @@
 @import "theme";
+@import url('https://fonts.googleapis.com/css?family=Montserrat&display=swap');
 
 body{
   margin: 0px;
@@ -98,7 +99,7 @@ h1, h2, h3, h4{
 }
 
 #welcome_card{
-  margin: 63px auto 10px 65px;
+  margin: 103px auto 10px 85px;
 }
 
 #mira-description{
@@ -106,13 +107,14 @@ h1, h2, h3, h4{
   font-style: italic;
   margin-left: 40px;
   margin-top: 18px;
+  font-family: 'Montserrat', sans-serif;
 }
 
 #welcome_to{
   color: white;
   font-family: Calibri;
-  font-size: 1.6em;
-  margin-bottom: 2vh;
+  font-size: 1.7em;
+  margin-bottom: 1.7vh;
 }
 
 #side-panel-welcome{
@@ -144,11 +146,12 @@ h1, h2, h3, h4{
 
 #logout{
   position: relative;
-  margin-left: 530px;
+  /* margin-left: 530px; */
   height: 36px;
+  border: 1px solid #1b1b1b;
   width: 90px;
+  background-color: white;
   border-radius: 5px;
-  margin-left: 76%;
 }
 
 #loginContainer{
@@ -160,7 +163,7 @@ h1, h2, h3, h4{
 
 #welcome{
   background-color: #5073a8;
-  width: 47%;
+  width: 67%;
   padding-top: 12%;
 }
 
@@ -168,7 +171,7 @@ h1, h2, h3, h4{
   height: 80%;
   display: flex;
   flex-direction: column;
-  margin: 160px auto 20px 60px;
+  margin: 200px auto 20px 30px;
   color: white;
 }
 
@@ -222,7 +225,9 @@ h1, h2, h3, h4{
   max-width: 100%;
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
   padding: 10px;
+  background-color: $top-menu;
 }
 
 #bottom-menu{
@@ -232,4 +237,5 @@ h1, h2, h3, h4{
   flex-direction: row;
   padding: 10px;
   border-top: 1px solid white;
+  font-family: 'Montserrat', sans-serif;
 }

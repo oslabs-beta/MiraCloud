@@ -1,4 +1,6 @@
 import React, {Component} from 'react';
+import '../styles/App.scss';
+
 // const {ipcRenderer} = require('electron');
 
 function Welcome (props) {
