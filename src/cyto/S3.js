@@ -1,7 +1,7 @@
 class S3 {
   constructor(data, parent, source){
     this.data = data;
-    this.id = data.id;
+    this.id = data;
     this.parent = parent;
     this.source = source;
   }
@@ -18,12 +18,12 @@ class S3 {
     // }
     if(this.source !== null){
       return [
-        {group: 'nodes', data: { parent:this.parent, label: "S3"}, classes: 'S3'},
-        { group: 'edges', data: { source: this.source}}
+        {group: 'nodes', data: { id: this.id, parent:this.parent, label: "S3"}, classes: 'S3'},
+        { group: 'edges', data: { id: this.id, source: this.source}}
       ]
     }
     else{
-      return {group: 'nodes', data: {  parent:this.parent, label: "S3: " + this.data}, classes: 'S3'}
+      return {group: 'nodes', data: { id: this.id, parent:this.parent, label: "S3: " + this.data}, classes: 'S3'}
     }
     
   }

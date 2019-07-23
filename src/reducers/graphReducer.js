@@ -41,11 +41,20 @@ const graphReducer = (state = initialState, action) => {
         }
       }
       case actionTypes.NODE_DETAILS: {
-        const VPC = action.payload[3];
-        const availabilityZone = action.payload[2];
-        const instanceType = action.payload[1];
+        console.log('why is it undefined, payload', action.payload)
+        console.log('nodedata', state);
         const instanceId = action.payload[0];
-        const nodeData = state.regionData[VPC][availabilityZone][instanceType][instanceId];
+        const instanceType = action.payload[1];
+        // const availabilityZone = action.payload[2];
+        const VPC = action.payload[3];
+        let nodeData;
+        if (instanceType === "S3"){
+          nodeData = state.regionData[VPC]['S3Data'][instanceId];
+        } else {
+          const availabilityZone = action.payload[2];
+          nodeData = state.regionData[VPC][availabilityZone][instanceType][instanceId];
+        }
+        console.log('node data before return', nodeData);
         return {
           ...state,
           activeNode: nodeData

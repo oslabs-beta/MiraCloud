@@ -78,8 +78,6 @@ export const getAWSInstances = (region, key1, key2) => {
     // Adding S3 Query
     // adding new promise to promise array
    
-
-        
     apiPromiseArray.push(new Promise(((resolve, reject) => {
       const innerPromiseArray = [];
       // make an api call to get information about RDS'
@@ -156,6 +154,7 @@ export const getAWSInstances = (region, key1, key2) => {
           for (let i = 0; i < data.Reservations.length; i++) {
             const instances = data.Reservations[i].Instances;
             for (let j = 0; j < instances.length; j++) {
+              if (instances[j].State.Name !== 'terminated'){
               const {
                 VpcId, Placement: { AvailabilityZone }, InstanceId, SecurityGroups,
               } = instances[j];
@@ -192,6 +191,7 @@ export const getAWSInstances = (region, key1, key2) => {
                   }
                 });
               })));
+            }
             }
           }
           Promise.all(innerPromiseArray).then(() => {
@@ -253,13 +253,42 @@ export const getAWSInstances = (region, key1, key2) => {
                             }
                             ) {
                               ...GetBucketLocationData
-                            }  
+                            }
+                            get_bucket_tagging_s3: getBucketTagging( input:{
+                              Bucket: "${namesOfBuckets[i]}"
+                            }
+                            ) {
+                              ...GetBucketTaggingData
+                            }
+                            get_bucket_website_s3: getBucketWebsite( input:{
+                              Bucket: "${namesOfBuckets[i]}"
+                            }
+                            ) {
+                              ...GetBucketWebsiteData
+                            }
                           }
                       }        
                       }            
-                         fragment GetBucketLocationData on AwsS3GetBucketLocationOutput{
+                        fragment GetBucketLocationData on AwsS3GetBucketLocationOutput{
                           LocationConstraint
                         }  
+                        fragment GetBucketTaggingData on AwsS3GetBucketTaggingOutput {
+                          TagSet{
+                            Key
+                            Value
+                          }
+                        }
+                        fragment GetBucketWebsiteData on AwsS3GetBucketWebsiteOutput {
+                          RedirectAllRequestsTo {
+                            Protocol
+                          }
+                          IndexDocument {
+                            Suffix
+                          }
+                          ErrorDocument{
+                            Key
+                          }
+                        }
                     `
                   }
                 }).then((resultObjFromQuery) => {
@@ -277,6 +306,10 @@ export const getAWSInstances = (region, key1, key2) => {
                         regionState[theOnlyVPC]['S3'] = [];
                         regionState[theOnlyVPC]['S3'].push(currBucketName);
                       }
+                      // logic for S3
+                      if(!regionState[theOnlyVPC]['S3Data']) regionState[theOnlyVPC]['S3Data'] = {};
+                      const S3Data = regionState[theOnlyVPC]['S3Data'];
+                      S3Data[currBucketName] = resultObjFromQuery.data.data.aws.s3;  
                     }
                   }
                   innerResolve();
@@ -630,13 +663,42 @@ export const getAllRegions = (publicKey, privateKey) => {
                       }
                       ) {
                         ...GetBucketLocationData
-                      }  
+                      }
+                      get_bucket_tagging_s3: getBucketTagging( input:{
+                        Bucket: "${bucketNameArr[i]}"
+                      }
+                      ) {
+                        ...GetBucketTaggingData
+                      }
+                      get_bucket_website_s3: getBucketWebsite( input:{
+                        Bucket: "${bucketNameArr[i]}"
+                      }
+                      ) {
+                        ...GetBucketWebsiteData
+                      }
                     }
                 }        
                 }            
-                   fragment GetBucketLocationData on AwsS3GetBucketLocationOutput{
+                  fragment GetBucketLocationData on AwsS3GetBucketLocationOutput{
                     LocationConstraint
                   }  
+                  fragment GetBucketTaggingData on AwsS3GetBucketTaggingOutput {
+                    TagSet{
+                      Key
+                      Value
+                    }
+                  }
+                  fragment GetBucketWebsiteData on AwsS3GetBucketWebsiteOutput {
+                    RedirectAllRequestsTo {
+                      Protocol
+                    }
+                    IndexDocument {
+                      Suffix
+                    }
+                    ErrorDocument{
+                      Key
+                    }
+                  }
               `
             }
           }).then((resultObjFromQuery) => {
@@ -651,9 +713,10 @@ export const getAllRegions = (publicKey, privateKey) => {
             }
             */
             let regionOfBucket = resultObjFromQuery.data.data.aws.s3.get_region_s3.LocationConstraint;
+            let currS3DataObject = resultObjFromQuery.data.data.aws.s3
             let currBucketName = bucketNameArr[i];
             // compiling it all into the data
-            graphData.compileS3Data(currBucketName, regionOfBucket);
+            graphData.compileS3Data(currBucketName, regionOfBucket, currS3DataObject );
             resolve();
           })
         
