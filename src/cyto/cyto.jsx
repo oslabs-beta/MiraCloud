@@ -25,24 +25,12 @@ class Cyto extends PureComponent {
             nodes: {},
             cssCounter: 0
         };
-        this.addCSS = this.addCSS.bind(this);
-    }
-    addCSS() {
-        let newNum = this.state.cssCounter + 1;
-        console.log('new nummmmmmmmmmmmmmm', newNum)
-        this.setState({
-            cssCounter: newNum
-        })
-        console.log('newer NUMMMMMMMMMM', this.state.cssCounter)
     }
     // function call to render a cytoscape object (entire graph)
     renderElement() {
         let getNodeFunction = this.props.getNodeDetails;
         let getStateNodes = this.state.nodes;
         // creates new cytoscape object and sets format for graph
-
-
-        
         this.cy = cytoscape({
             container: document.getElementById('cy'),
             boxSelectionEnabled: true,
@@ -129,13 +117,13 @@ class Cyto extends PureComponent {
                 .css({
                     'border-style': 'dotted'
                 })
-                .selector('.S3')
+                .selector('.S3') 
                 .css({
-                    'border-color': '#2563FF'
+                    'border-color': '#2563FF' //change S3 Border Color
                 })
                 .selector(':selected')
                 .css({
-                    'border-color': '#D69BFF'
+                    'border-color': '#D69BFF' // change selected border color
                 })
        
 
