@@ -23,17 +23,30 @@ class Cyto extends PureComponent {
         this.state = {
             regions: new Set(),
             nodes: {},
+            cssCounter: 0
         };
+        this.addCSS = this.addCSS.bind(this);
+    }
+    addCSS() {
+        let newNum = this.state.cssCounter + 1;
+        console.log('new nummmmmmmmmmmmmmm', newNum)
+        this.setState({
+            cssCounter: newNum
+        })
+        console.log('newer NUMMMMMMMMMM', this.state.cssCounter)
     }
     // function call to render a cytoscape object (entire graph)
     renderElement() {
         let getNodeFunction = this.props.getNodeDetails;
         let getStateNodes = this.state.nodes;
         // creates new cytoscape object and sets format for graph
+
+
+        
         this.cy = cytoscape({
             container: document.getElementById('cy'),
-            boxSelectionEnabled: false,
-            autounselectify: true,
+            boxSelectionEnabled: true,
+            autounselectify: false,
             // styling format for each element of the object (nodes, edges, etc.)
             style: cytoscape.stylesheet()
                 .selector('node')
@@ -116,6 +129,15 @@ class Cyto extends PureComponent {
                 .css({
                     'border-style': 'dotted'
                 })
+                .selector('.S3')
+                .css({
+                    'border-color': '#2563FF'
+                })
+                .selector(':selected')
+                .css({
+                    'border-color': '#D69BFF'
+                })
+       
 
         });
         /**
@@ -126,12 +148,10 @@ class Cyto extends PureComponent {
          */
         //check to see if you can access parent of the current node to pass into function
         this.cy.on('tap', 'node', function (evt) {
-            console.log('GET STATE NODES', getStateNodes);
-            console.log('this.id', this.id());
-            
-                getNodeFunction(getStateNodes[this.id()]);
-            
+            getNodeFunction(getStateNodes[this.id()]);
         })
+
+
     }
     // invokes the function to create object
     componentDidMount() {
