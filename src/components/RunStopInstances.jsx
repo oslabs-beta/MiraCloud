@@ -37,12 +37,12 @@ start(){
 stop(){
     this.setState({ stop: true , start:false})
     this.openModal();
-    console.log("YEAAAAAAAAH",this.props.activeNode)
 };
 
 openModal() {
     this.setState({modalIsOpen: true});
   }
+
 closeModal() {
     this.setState({ modalIsOpen: false, start: false, stop: false});
   }
@@ -85,12 +85,12 @@ if (this.props.activeNode.InstanceId){
         if (err) reject(`Couldn't start "${this.props.activeNode.DBInstanceIdentifier}"`,err);
         else resolve(data); 
       }));
-    })}
-  runRDSIns()
-  .then(() => this.closeModal())
-  .then(() => alert(`"${this.props.activeNode.DBInstanceIdentifier}" has been started.Please refresh page.`) )
-  .catch((err) => alert(err))
-  }
+    })};
+    runRDSIns()
+    .then(() => this.closeModal())
+    .then(() => alert(`"${this.props.activeNode.DBInstanceIdentifier}" has been started.Please refresh page.`) )
+    .catch((err) => alert(err))
+  };
 event.preventDefault();
 };
 
@@ -118,8 +118,7 @@ if (this.props.activeNode.InstanceId){
       .then( () => alert(`"${this.props.activeNode.InstanceId}" has been stoped.Please refresh page.`) )
       .then( () => this.closeModal())
       .catch(err => alert(err))
-    }
-
+}
     // Function to stop RDS instances
     else if (this.props.activeNode.DBInstanceIdentifier){
       const params = {
@@ -138,42 +137,38 @@ if (this.props.activeNode.InstanceId){
       .then(() => this.closeModal())
       .catch(() => alert(err))
     };
-    // stop reloading app in any condition
-    event.preventDefault();
+  event.preventDefault();
 };
 
 
 
 render(){
   let displayStart = [
-	<div>
-		<p>Click Start Instance to start "{this.props.activeNode.InstanceId ? this.props.activeNode.InstanceId : this.props.activeNode.DBInstanceIdentifier }" instance</p>
-		<button onClick={this.startInstance}> Start Instance</button>
-	</div>
+    <div>
+      <p>Click Start Instance to start "{this.props.activeNode.InstanceId ? this.props.activeNode.InstanceId : this.props.activeNode.DBInstanceIdentifier }" instance</p>
+      <button onClick={this.startInstance}> Start Instance</button>
+    </div>
   ]
 
   let displayStop = [
 	  <div>
-		<p>Click Stop Instance to stop "{this.props.activeNode.InstanceId ? this.props.activeNode.InstanceId : this.props.activeNode.DBInstanceIdentifier }" instance</p>
-		<button onClick={this.stopInstance} >Stop Instance</button>		  
+		  <p>Click Stop Instance to stop "{this.props.activeNode.InstanceId ? this.props.activeNode.InstanceId : this.props.activeNode.DBInstanceIdentifier }" instance</p>
+		  <button onClick={this.stopInstance} >Stop Instance</button>		  
 	  </div>
   ] 
 
-  let buttons = [
-    <button onClick={this.start}> Start Instance</button>,
-    <button onClick={this.stop}> Stop instance</button>
-  ]
 
 return(
     <div id="runstop">
-    { this.props.activeNode !== undefined ? buttons : false }
+      <button onClick={this.start}> Start Instance</button>,
+      <button onClick={this.stop}> Stop instance</button>
     <Modal isOpen={this.state.modalIsOpen} onRequestClose={this.closeModal} style={customStyles} contentLabel="Other Modal">
         {this.state.stop ? displayStop : displayStart}
         <button onClick={this.closeModal}>Close</button>
     </Modal>
     </div>
-  )
- }
-}
+  );
+ };
+};
 
 export default RunStopInstances;

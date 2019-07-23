@@ -23,7 +23,7 @@ class Side_Panel extends Component {
 
     this.state = {
       modalIsOpen: false,
-      delete: false,
+      delete: false
     };
     
     this.delete = this.delete.bind(this);
@@ -105,11 +105,7 @@ class Side_Panel extends Component {
           "Node Details": this.props.activeNode
         }
       }
-      // let nodeData = {
-      //   "Node Details": this.props.activeNode,
-      //   "Security Group Details": this.props.activeNode.MySecurityGroups
-      // };
-      // console.log("fdsjfdhsjk", securityGroupNames);
+
       if(this.props.currentRegion !== 'all') {
         sgmodal =(
           <div>
@@ -119,17 +115,12 @@ class Side_Panel extends Component {
           <button
           id="deleteBtn"
           onClick={() => {
-            // console.log(
-              //   "this is current delete statement =>",
-              //   this.state.delete
-              // );
-              this.delete();
-              this.openModal();
-            }}
+            this.delete();
+            this.openModal();
+          }}
         >
           Delete SG rules
         </button>
-            <RunStopInstances activeNode={this.props.activeNode} />
         </div>
         );
       }
@@ -166,6 +157,7 @@ class Side_Panel extends Component {
       NodeDetails = (
         <div id="details-wrapper">
           <Collapsible trigger="Node Summary" open="true">
+        <RunStopInstances activeNode={this.props.activeNode} />
             {sgmodal}
             <p>
               <span className="sidebar-title">Instance Type: </span>
@@ -207,8 +199,8 @@ class Side_Panel extends Component {
       <div id="sidePanel">
         {sidePanelWelcome}
         <Modal isOpen={this.state.modalIsOpen} onAfterOpen={this.afterOpenModal} onRequestClose={this.closeModal} style={customStyles} contentLabel="Example Modal">
-        <SecGroupEdit sgData={this.props.activeNode.MySecurityGroups} onRequestClose={this.closeModal} delete={this.state.delete}/>
-        <button onClick={this.closeModal}>Close</button>
+         <SecGroupEdit sgData={this.props.activeNode.MySecurityGroups} onRequestClose={this.closeModal} delete={this.state.delete}/>
+         <button onClick={this.closeModal}>Close</button>
         </Modal>
         {NodeDetails}
       </div>

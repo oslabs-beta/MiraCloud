@@ -6,7 +6,6 @@ import * as actions from "../actions/actions.js";
 import Modal from 'react-modal';
 import InstanceCreator from './InstanceCreator.jsx'
 
-
 const mapDispatchToProps = dispatch => ({
   logOut: () => {
      dispatch(actions.logOut())
@@ -35,7 +34,6 @@ class Menu extends Component {
    this.openModal = this.openModal.bind(this);
    this.closeModal = this.closeModal.bind(this);
   }
-  
 
   openModal(string) {
     if(string === 'delete') this.setState({modalIsOpen: true, delete: true});
@@ -97,8 +95,6 @@ class Menu extends Component {
        this.props.logOut()
     }
 
-    
-
     return (
       <div id="Menu">
         <div id='top-menu'>
@@ -115,7 +111,8 @@ class Menu extends Component {
             <button onClick={this.closeModal}>close</button>
           </Modal>
           <button id='createInstance' onClick={(e)=>{this.openModal('create')}}>Launch EC2 Instance</button>
-          <button id='deleteInstance' onClick={(e)=>{this.openModal('delete')}}>Delete Instance</button>        </div>
+          <button id='deleteInstance' onClick={(e)=>{this.openModal('delete')}}>Delete Instance</button>  
+        </div>
       </div>
     );
   }
