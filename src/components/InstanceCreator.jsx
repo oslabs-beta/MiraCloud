@@ -153,13 +153,6 @@ class InstanceCreator extends Component {
 	}; 
 	// stayable two strings
   deleteInstance() {
-    let nodeRegion = this.props.activeNode.Placement.AvailabilityZone;
-    let regionArr = nodeRegion.split('');
-    regionArr.pop();
-    let regionStr = regionArr.join('');
-    console.log(regionStr);
-    console.log(this.source.value);
-    console.log(this.props.activeNode);
     let instanceId = this.source.value;
     let activeNode = this.props.activeNode;
     // console.log('instanceid', `${instanceId}`);
@@ -168,7 +161,7 @@ class InstanceCreator extends Component {
         let forceErr = false;
         if(activeNode.MySecurityGroups){
           for(let i = 0; i < Object.keys(activeNode.MySecurityGroups).length; i++){
-            if(activeNode.MySecurityGroups[i].IpPermissions.length > 1 || activeNode.MySecurityGroups[i].IpPermissionsEgress.length > 1){
+            if(activeNode.MySecurityGroups[i].IpPermissions.length > 0 || activeNode.MySecurityGroups[i].IpPermissionsEgress.length > 1){
               forceErr = true;
             }
           }
@@ -177,14 +170,14 @@ class InstanceCreator extends Component {
         else resolve();
       })
     }
-    function deleteSG(){ return new Promise((resolve, reject)=>{
+    function deleteSG(regionStr, securityGroupId){ return new Promise((resolve, reject)=>{	
       let ec2 = new AWS.EC2({region:regionStr});
       let paramsSG = {
-       GroupId: `${activeNode.SecurityGroups[0].GroupId}`
+       GroupId: `${securityGroupId}`
       }
       ec2.deleteSecurityGroup(paramsSG, function(err, data) {
         if (err){
-          reject(err); 
+          reject({'error message': err}); 
         } // an error occurred
         else resolve(data);          // successful response
       });
@@ -192,6 +185,10 @@ class InstanceCreator extends Component {
     }
 
    if(this.type.value === 'EC2'){
+	let nodeRegion = this.props.activeNode.Placement.AvailabilityZone;
+	let regionArr = nodeRegion.split('');
+	regionArr.pop();
+	let regionStr = regionArr.join('');
       // console.log('ec2')
     let params = {
       InstanceIds: [`${instanceId}`],
@@ -201,8 +198,7 @@ class InstanceCreator extends Component {
     function deleteEC2(){return new Promise((resolve,reject)=>{
       ec2.terminateInstances(params, function (err, data) {
         if (err){
-          console.log(err, err.stack);
-          reject(err);
+          reject({'error message': err});
         } // an error occurred
         else{
           console.log(data);  
@@ -213,17 +209,21 @@ class InstanceCreator extends Component {
     };
     checkSG()
     .then(()=>{deleteEC2()})
-    .then(()=>{deleteSG()})
+    .then(()=>{deleteSG(regionStr, activeNode.SecurityGroups[0].GroupId)})
     .then((data)=>{
       console.log(data);
       this.props.onRequestClose();
     })
-    .catch(function(err) {
+    .catch(function(err){
       alert(err);
     });
   }
     else if(this.type.value === 'RDS'){
-      console.log('rds');
+	let nodeRegion = this.props.activeNode.AvailabilityZone;
+	let regionArr = nodeRegion.split('');
+	regionArr.pop();
+	let regionStr = regionArr.join('');
+    console.log('rds');
       let params = {
         DBInstanceIdentifier: `${instanceId}`,
         SkipFinalSnapshot: true
@@ -233,7 +233,7 @@ class InstanceCreator extends Component {
         rds.deleteDBInstance(params, function(err, data) {
           if (err){
             console.log(err, err.stack);
-            reject(err);
+            reject({'error message': err});
           } // an error occurred
           else{
             console.log(data); 
@@ -245,11 +245,12 @@ class InstanceCreator extends Component {
 
        checkSG()
        .then(()=>{deleteRDS()})
-       .then(()=>{deleteSG()})
+       .then(()=>{deleteSG(regionStr, activeNode.VpcSecurityGroups[0].VpcSecurityGroupId)})
        .then((data)=>{
           this.props.onRequestClose();
       })
        .catch(function(err) {
+		   console.log('error here:', err);
         alert(err);
       });
     }
@@ -259,12 +260,11 @@ class InstanceCreator extends Component {
   }
 
   render(){
+    console.log('this active node HERE:',this.props.activeNode);
 	  let imgOptions = [];
 	  for(let key in inAllRegions){
-		  console.log('key', key);
 		  imgOptions.push(<option value={key}>{inAllRegions[key]}</option>)
 	  }
-	  console.log('options:', imgOptions);
     // console.log('active node: ', this.props.activeNode);
   		let displayCreate = [<form>
         <div>Create New Instances</div>
@@ -287,7 +287,6 @@ class InstanceCreator extends Component {
   <select id="instance" ref={input =>(this.type = input)}>
       <option value="EC2">EC2</option>
       <option value="RDS">RDS</option>
-      <option value="S3">S3</option>
   </select>
   <input ref={input => (this.source = input)} defaultValue={this.props.activeNode.InstanceId ? this.props.activeNode.InstanceId : this.props.activeNode.DBInstanceIdentifier}/>
   <button onClick={(e)=>{this.deleteInstance()}}>Delete</button>
