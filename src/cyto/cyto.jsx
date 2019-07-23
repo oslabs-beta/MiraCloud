@@ -34,8 +34,8 @@ class Cyto extends PureComponent {
         // creates new cytoscape object and sets format for graph
         this.cy = cytoscape({
             container: document.getElementById('cy'),
-            boxSelectionEnabled: false,
-            autounselectify: true,
+            boxSelectionEnabled: true,
+            autounselectify: false,
             // styling format for each element of the object (nodes, edges, etc.)
             style: cytoscape.stylesheet()
                 .selector('node')
@@ -138,7 +138,14 @@ class Cyto extends PureComponent {
                 .css({
                     'border-color': '#f77171',
                 })
-
+                .selector('.S3') 
+                .css({
+                    'border-color': '#2563FF' //change S3 Border Color
+                })
+                .selector(':selected')
+                .css({
+                    'border-color': '#D69BFF' // change selected border color
+                })
         });
         /**
          *  VPCs just pass in the id
@@ -150,6 +157,7 @@ class Cyto extends PureComponent {
         this.cy.on('tap', 'node', function (evt) {
             getNodeFunction(getStateNodes[this.id()]);
         })
+
     }
     // invokes the function to create object
     componentDidMount() {
