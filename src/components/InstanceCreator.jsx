@@ -47,27 +47,25 @@ const inAllRegions = {
 class InstanceCreator extends Component {
 	constructor(props) {
 		super(props);
-		// AWS.config.update({ region: this.props.selectedRegion.value }); //updates arguments region, maxRetries, logger
 		this.state = {
 			value: "value",
-			sg: String( Math.floor(Math.random() * 2000)),
+			sg: "mira-" + String( Math.floor(Math.random() * 2000)),
 			inputRegion: null
 		};
 		this.changeRegion = this.changeRegion.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.deleteInstance = this.deleteInstance.bind(this);
 		this.change = this.change.bind(this);
-	}
+	};
 	
 	
 	changeRegion(event){
 		this.setState({inputRegion: event.target.value})
-		console.log("current inputChange => ", this.state.inputRegion);
 	};
 	
 	change(event) {
 		this.setState({ value: event.target.value });
-		console.log("HERE IS CURRENT REGION=>", AWS.config.region)		
+		console.log("REF KEY_PAIR => ",this.keyPair.value)	
 	}
 	handleSubmit() {
 		if (this.props.selectedRegion.value === "all" || this.state.inputRegion !== null) AWS.config.update({region: inAllRegions[this.state.inputRegion]})
@@ -76,11 +74,10 @@ class InstanceCreator extends Component {
 		const rds = new AWS.RDS();
 		let sg = this.state.sg;
 		if (this.state.value === "RDS") {
-			// console.log("IMMMHEREEE from rds", this.state.instance);
 			const params = {
-				DBInstanceClass: 'db.t2.micro', /* required */
-				DBInstanceIdentifier: 'mydbinstance', /* required */
-				Engine: 'postgres', /* required */
+				DBInstanceClass: 'db.t2.micro', 
+				DBInstanceIdentifier: 'mydbinstance', 
+				Engine: 'postgres', 
 			}
 			function createDBInstance(){
 				return new Promise((resolve, reject) => {
@@ -95,24 +92,23 @@ class InstanceCreator extends Component {
 			.catch(err => console.log('you got error =>', err))
 			
 			event.preventDefault();
-			
 		};
 
 		// functionality for creating ec2
 		if (this.state.value === "EC2") {
 			function createSecurityGroup(sg){
 				const params = {
-					Description: 'Security_Group_for_Instance', /* required */
-					GroupName: sg, /* required */
+					Description: 'Security_Group_for_Instance',
+					GroupName: sg,
 				};
 				return new Promise((resolve, reject) => { 
 					ec2.createSecurityGroup(params, function(err, data) {
-						if (err) reject(err); // an error occurred
+						if (err) reject('Could not create instance',err); // an error occurred
 						else  resolve(data);           // successful response
 					});
 				});
 			};
-			
+
 			// Create the instance
 			let params = {
 				ImageId: imageId[AWS.config.region], // us-west-1 Amazon Linux AMI 2017.03.0 (HVM), SSD Volume Type
@@ -135,21 +131,14 @@ class InstanceCreator extends Component {
 				})
 			};
 			createSecurityGroup(sg)
-			// .catch(err=>console.log("Group name already exists",err) 
-			.then(() => {
-				console.log("SECURITY GROUP HAS BEEN CREATED")
-				createEC2Instance()
-			})
-			.then(data => {
-				console.log(data); 
-				this.props.onRequestClose();
-			})
-			.catch(err => console.log(err))
+			.then(() => { createEC2Instance()})
+			.then(() => alert(`EC2 Instance Successfully launched in ${AWS.config.region}.Please refresh page.`))
+			.then(() => this.props.onRequestClose())
+			.catch(err => alert(err))
 			
 			event.preventDefault();
 		}
-		this.setState({sg: String( Math.floor(Math.random() * 2000))})
-		// event.reload(true);
+		this.setState({sg:"mira-" + String( Math.floor(Math.random() * 2000))})
 	}; 
 	// stayable two strings
   deleteInstance() {
@@ -259,6 +248,7 @@ class InstanceCreator extends Component {
     }
   }
 
+
   render(){
     console.log('this active node HERE:',this.props.activeNode);
 	  let imgOptions = [];
@@ -266,7 +256,7 @@ class InstanceCreator extends Component {
 		  imgOptions.push(<option value={key}>{inAllRegions[key]}</option>)
 	  }
     // console.log('active node: ', this.props.activeNode);
-  		let displayCreate = [<form>
+  	let displayCreate = [<form>
         <div>Create New Instances</div>
         <select id="instance" onChange={this.change} value={this.state.value}>
           <option value="select">Select Instance</option>
@@ -281,8 +271,8 @@ class InstanceCreator extends Component {
 		<input type="text" ref={input => (this.keyPair = input)}/>
 		<br />
         <button onClick={this.handleSubmit}>Create Instance</button>
-      </form>];
-
+	  </form>];
+	  
   let displayDelete = [<div><h4>Selected Node:</h4>
   <select id="instance" ref={input =>(this.type = input)}>
       <option value="EC2">EC2</option>
@@ -292,7 +282,7 @@ class InstanceCreator extends Component {
   <button onClick={(e)=>{this.deleteInstance()}}>Delete</button>
   </div>]
 return (
-    <div id="InstanceModal">
+	<div id="InstanceModal">
         {this.props.delete ?  displayDelete : displayCreate}
     </div>
 )
