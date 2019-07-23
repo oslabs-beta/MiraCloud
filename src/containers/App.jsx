@@ -4,6 +4,8 @@ import React, {Component} from "react";
 import MainContainer from "./mainContainer";
 import Menu from "../components/Menu.jsx"
 import Login from "../components/Login.jsx"
+import Welcome from "../components/Welcome.jsx"
+import FlexLogin from "../components/FlexLogin.jsx"
 import * as actions from "../actions/actions.js";
 import { connect } from 'react-redux';
 
@@ -19,7 +21,7 @@ const mapStateToProps = store => ({
   finishedFlag: store.graph.fetched,
   publicKey: store.login.awsPublicKey,
   privateKey: store.login.awsPrivateKey,
-  loginKey: true //store.login.loginKey
+  loginKey: store.login.loginKey
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -50,14 +52,17 @@ class App extends Component{
   render(){
     console.log(this.props);
     let display = [];
+    let loginWelcome = <FlexLogin loginKey={this.props.loginKey} logIn={this.props.logIn}/>;
     display.push(<Menu activeNode={this.props.activeNode} publicKey={this.props.publicKey} privateKey={this.props.privateKey} getAWSInstances={this.props.getAWSInstances} currentRegion={this.props.currentRegion} getAllRegions={this.props.getAllRegions} />);
     display.push(<MainContainer getAWSKeys={this.props.getAWSKeys} getAWSInstances={this.props.getAWSInstances} regionData={this.props.regionData} 
       getNodeDetails={this.props.getNodeDetails} activeNode={this.props.activeNode} fetchingFlag={this.props.fetchingFlag} finishedFlag={this.props.finishedFlag}
       edgeTable= {this.props.edgeTable} currentRegion={this.props.currentRegion}/>);
+    
     return(
       <div id="app">
-        {this.props.loginKey ? display : <Login loginKey={this.props.loginKey} logIn={this.props.logIn}/> }
+        {this.props.loginKey ? display : loginWelcome}
       </div>
+      
     )
   }
 }

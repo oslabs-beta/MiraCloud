@@ -6,9 +6,11 @@ body{
   background-color: $bg-color;
 }
 #app{
-  display:grid;
-  grid-template: 1fr;
   background-color: $bg-color;
+}
+
+#flex-card {
+  display: flex;
 }
 // #Menu{
 //   // border-bottom: 1px outset $border-color;
@@ -56,7 +58,6 @@ body{
   width:30px;
 }
 
-
 #loading img{
   margin-top: 45vh;
   margin-left: 50%;
@@ -95,10 +96,25 @@ h1, h2, h3, h4{
   width: 200px;
   margin: 10px 10px;
 }
-#welcome{
-  text-align: center;
-  padding-top: 12%;
+
+#welcome_card{
+  margin: 63px auto 10px 65px;
 }
+
+#mira-description{
+  color: white;
+  font-style: italic;
+  margin-left: 40px;
+  margin-top: 18px;
+}
+
+#welcome_to{
+  color: white;
+  font-family: Calibri;
+  font-size: 1.6em;
+  margin-bottom: 2vh;
+}
+
 #side-panel-welcome{
   color: $light-font-color;
   text-align: center;
@@ -136,10 +152,24 @@ h1, h2, h3, h4{
 }
 
 #loginContainer{
-  height: 90px;
-  flex-direction: column;
+  border: 1px solid white;
+  width: 60%;
+  background-color: #1b1b1b;
+  height: 90vw;
+}
+
+#welcome{
+  background-color: #5073a8;
+  width: 47%;
+  padding-top: 12%;
+}
+
+#input_keys{
+  height: 80%;
   display: flex;
-  margin: 20% auto 50% 35%;
+  flex-direction: column;
+  margin: 160px auto 20px 60px;
+  color: white;
 }
 
 #login_keys{  
@@ -147,8 +177,40 @@ h1, h2, h3, h4{
 }
 
 #accessKeys{
-  height: 28px;
+  height: 40px;
   margin: 4% auto 6% 8%;
+  color: white;
+  font-size: 1em;
+  background: #1b1b1b;
+  width: 36vw;
+  font-weight: bold; 
+  border: none;
+  border-bottom: 1px solid white;
+}
+
+#login_button{
+  width: 37%;
+  height: 4.7vw;
+  border-radius: 1.5vw;
+  font-size: 1em;
+  margin: 20px auto 20px 110px;
+  font-weight: bolder;
+  /* border-color: #6a9adc; */
+  border-color: #121212;
+  color: #252525;
+  background-color: #75a2e6;
+}
+
+#keys{
+  height: 2vw;
+  margin-right: 8px;
+}
+#keys_label{
+  font-size: 1.2em;
+  font-weight: bolder;
+  margin-right: 8px;
+  height: 18px !important;
+  margin: 10px auto 10px 40px;
 }
 
 #small_logo{
