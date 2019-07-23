@@ -111,8 +111,8 @@ class Menu extends Component {
           <Select id='select-menu' value={this.state.selectedOption} onChange={handleChange} options={options}/>
           <button id="refresh" onClick={refresh}><img id="refreshimg" src="../src/assets/refresh.png"/></button> 
           <Modal isOpen={this.state.modalIsOpen} onRequestClose={this.closeModal} style={customStyles} contentLabel="Instance Modal">
-          <InstanceCreator delete={this.state.delete} selectedRegion={this.state.selectedOption} activeNode={this.props.activeNode} onRequestClose={this.closeModal}/>
-          <button onClick={this.closeModal}>close</button>
+            <InstanceCreator selectedRegion={this.state.selectedOption} delete={this.state.delete} activeNode={this.props.activeNode} onRequestClose={this.closeModal}/>
+            <button onClick={this.closeModal}>close</button>
           </Modal>
           <button id='createInstance' onClick={(e)=>{this.openModal('create')}}>Launch EC2 Instance</button>
           <button id='deleteInstance' onClick={(e)=>{this.openModal('delete')}}>Delete Instance</button>        </div>

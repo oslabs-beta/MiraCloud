@@ -92,7 +92,7 @@ class Side_Panel extends Component {
         securityGroupNames = this.analyzeSecurityGroups(
           this.props.activeNode.MySecurityGroups
         );
-        console.log('SECURITY GROPU NAMES', securityGroupNames);
+        console.log('SECURITY GROUP NAMES', securityGroupNames);
       }
       let nodeData;
       if (this.props.activeNode.MySecurityGroups) {
@@ -105,16 +105,38 @@ class Side_Panel extends Component {
           "Node Details": this.props.activeNode
         }
       }
-      sgmodal = (
-        <button id="modal-pop-up" onClick={this.openModal}>
-          Edit Security Groups
+      // let nodeData = {
+      //   "Node Details": this.props.activeNode,
+      //   "Security Group Details": this.props.activeNode.MySecurityGroups
+      // };
+      // console.log("fdsjfdhsjk", securityGroupNames);
+      if(this.props.currentRegion !== 'all') {
+        sgmodal =(
+          <div>
+          <button id="modal-pop-up" onClick={this.openModal}>
+            Add SG Rules
+          </button>
+          <button
+          id="deleteBtn"
+          onClick={() => {
+            // console.log(
+              //   "this is current delete statement =>",
+              //   this.state.delete
+              // );
+              this.delete();
+              this.openModal();
+            }}
+        >
+          Delete SG rules
         </button>
-      );
-      console.log(this.props.activeNode);
+            <RunStopInstances activeNode={this.props.activeNode} />
+        </div>
+        );
+      }
       let sgDetails = [];
       if (securityGroupNames){
         sgDetails.push(
-        <div>
+          <div>
         <p>
           <span className="sidebar-title">Security Groups: </span>
           <span>
@@ -145,17 +167,6 @@ class Side_Panel extends Component {
         <div id="details-wrapper">
           <Collapsible trigger="Node Summary" open="true">
             {sgmodal}
-            <button
-              id="deleteBtn"
-              onClick={() => {
-                this.delete();
-                this.openModal();
-              }}
-            >
-              Delete SG rules
-            </button>
-
-              <RunStopInstances activeNode={this.props.activeNode} />
             <p>
               <span className="sidebar-title">Instance Type: </span>
               <span>{InstanceTypeDisplay}</span>
