@@ -38,7 +38,6 @@ export const getAWSInstancesError = err => ({
 //which other SG they are connected to through in-bound and out-bound
 
 export const getAWSInstances = (region, key1, key2) => {
-  console.log('keys', key1, key2);
   //sdk config to send in the region
   AWS.config.update({
     region,  // since we figure out we get info for this region
@@ -148,7 +147,6 @@ export const getAWSInstances = (region, key1, key2) => {
           console.log('Error', err.stack);
           reject();
         } else {
-          console.log('EC2 data from SDK', data);
           // data is formatted differently from RDS, needs an extra layer of iteration
           
           for (let i = 0; i < data.Reservations.length; i++) {
@@ -325,8 +323,6 @@ export const getAWSInstances = (region, key1, key2) => {
 
     // once all the promise's are resolved, dispatch the data to the reducer
     Promise.all(apiPromiseArray).then((values) => {
-      console.log('da region state in single region stuff',regionState)
-
       const edgeTable = {};
       for (let i = 0; i < sgRelationships.length; i++) {
         sgNodeCorrelations[sgRelationships[i][0]].forEach((val1, val2, set) => {
@@ -664,7 +660,6 @@ export const getAllRegions = (publicKey, privateKey) => {
         `
       }
     }).then((result) => {
-      console.log('This is the result: ', result);
       const aws = result.data.data.aws;
       let graphData = new compileGraphData();
       let allRegionsPromisesArray = []
@@ -674,8 +669,6 @@ export const getAllRegions = (publicKey, privateKey) => {
       const awsRDS = aws.rds;
       const awsS3 = aws.s3;
       const lambda = aws.lambda;
-      console.log('s3', awsS3);
-      console.log(awsEC2, awsRDS);
       // recreated this with two for loops, since we have two new objects
 
       // EC2
@@ -796,7 +789,6 @@ export const getAllRegions = (publicKey, privateKey) => {
       }
 
       //lambda
-      console.log('original lambda data', lambda);
       for (let regions in lambda) {
         const regionArray = regions.split("_")
         const regionString = regionArray[0] + "-" + regionArray[1] + "-" + regionArray[2];
@@ -813,9 +805,7 @@ export const getAllRegions = (publicKey, privateKey) => {
           graphData.createEdges();
           const edgeTable = graphData.getEdgesData();
           
-          console.log('Heres the graph data for regions: ', edgeTable);
           const regionState = graphData.getRegionData();
-          console.log('REGION STATEEEEE', regionState);
           dispatch(getAWSInstancesFinished());
           dispatch({
             type: actionTypes.GET_AWS_INSTANCES,

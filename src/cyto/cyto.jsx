@@ -202,8 +202,6 @@ class Cyto extends PureComponent {
                 let rdsInstances = vpcObj[az].RDS;
                 for (let rds in rdsInstances) {
                     this.cy.add(new RDS(rdsInstances[rds], vpcObj.region + "-" + vpc + "-" + az, null).getRDSObject());
-                    console.log('THIS IS CY', this.cy)
-                    console.log('STATE NODES', this.state.nodes);
                     this.state.nodes[rds] = [rds, "RDS", az, vpc];
                 }
                 // S3 instance
@@ -226,7 +224,6 @@ class Cyto extends PureComponent {
             if (s3Instances){
                 for (let i = 0; i < s3Instances.length; i++){
                     this.cy.add(new S3(s3Instances[i], vpcObj.region + "-" + vpc, null).getS3Object());
-                    console.log('V P C', vpc);
                     this.state.nodes[s3Instances[i]] = [s3Instances[i], "S3", vpcObj.region, vpc];
 
                 }
@@ -234,7 +231,6 @@ class Cyto extends PureComponent {
             let lambdaInstances = vpcObj.Lambda;
             if(lambdaInstances){
                 for(let func in lambdaInstances){
-                    console.log('from cyto data in lambda:', vpcObj);
                     this.cy.add(new Lambda(lambdaInstances[func], vpcObj.region + '-' + vpc).getLambdaObject());
                     this.state.nodes[lambdaInstances[func].FunctionName] = [lambdaInstances[func].FunctionName, 'Lambda', lambdaInstances[func].Region, vpc];
                 }

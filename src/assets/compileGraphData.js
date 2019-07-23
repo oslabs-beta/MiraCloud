@@ -161,8 +161,6 @@ class compileGraphData {
     }
 
     compileS3Data(currentBucketName, region, currS3DataObject){
-        console.log('CURRENT BUCKET NAME', currentBucketName);
-        console.log('current s3 logic', currS3DataObject)
         for (let vpc in this.regionState){
             if (this.regionState[vpc].region === options[region]){
                 if(this.regionState[vpc]['S3']){
@@ -177,7 +175,6 @@ class compileGraphData {
                 S3Data[currentBucketName] = currS3DataObject;  
             }  
         }
-        console.log('S3 IN FILE COMPILEGRAPHDATA', this.regionState);
     }
 
     compileLambdaData(data, region){
@@ -237,7 +234,6 @@ class compileGraphData {
          }      
          this.edgeTable[id].add(sg);
        }
-       console.log("the edge tables",this.edgeTable) 
        return this.edgeTable;
     }
 
