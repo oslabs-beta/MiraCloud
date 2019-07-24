@@ -19,7 +19,6 @@ class Security_Group_Edit extends Component {
   }
 
   getSgTotal(){
-    console.log("this is sgData from getSgTotal", this.props.sgData);
     const {sgData} = this.props;
     const groupIds = [];
     for (let i = 0; i < sgData.length; i++) {
@@ -163,7 +162,6 @@ class Security_Group_Edit extends Component {
         editSGPromisesIn()
           .then(result => {
             this.props.onRequestClose();
-            console.log("Got the result: " + result);
           })
           .catch(function(err) {
             alert(err);
@@ -172,7 +170,6 @@ class Security_Group_Edit extends Component {
         editSGPromisesOut()
           .then(() => {
             this.props.onRequestClose();
-            // console.log('Got the result: ' + result);
           })
           .catch(function(err) {
             alert(err);
@@ -202,7 +199,6 @@ class Security_Group_Edit extends Component {
         revokeSGPromisesIn()
           .then(result => {
             this.props.onRequestClose();
-            console.log("Got the result: " + result);
           })
           .catch(function(err) {
             alert(err);
