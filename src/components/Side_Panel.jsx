@@ -104,8 +104,25 @@ class Side_Panel extends Component {
           "Node Details": this.props.activeNode
         }
       }
-
-      if(this.props.currentRegion !== 'all') {
+      let InstanceTypeDisplay;
+      let InstanceIdDisplay;
+      let InstanceStatusDisplay;
+      if(this.props.activeNode.InstanceId){
+        InstanceTypeDisplay = "EC2";
+        InstanceIdDisplay = this.props.activeNode.InstanceId;
+        InstanceStatusDisplay = this.props.activeNode.State.Name;
+      } else if (this.props.activeNode.DBInstanceStatus){
+        InstanceTypeDisplay = "RDS";
+        InstanceIdDisplay = this.props.activeNode.DBInstanceIdentifier;
+        InstanceStatusDisplay = this.props.activeNode.DBInstanceStatus;
+      } else if (this.props.activeNode.get_region_s3){
+        InstanceTypeDisplay = "S3";
+      } else{
+        InstanceTypeDisplay = 'Lambda';
+        InstanceIdDisplay = this.props.activeNode.FunctionName;
+        InstanceStatusDisplay = this.props.activeNode.TracingConfig.Mode;
+      }
+      if(this.props.currentRegion !== 'all' && InstanceTypeDisplay !== 'Lambda' && InstanceTypeDisplay !== 'S3') {
         sgmodal =(
           <div>
           <button id="modal-pop-up" onClick={this.openModal}>
@@ -120,6 +137,7 @@ class Side_Panel extends Component {
         >
           Delete SG rules
         </button>
+        <RunStopInstances activeNode={this.props.activeNode} />
         </div>
         );
       }
@@ -145,28 +163,10 @@ class Side_Panel extends Component {
         </div>
         )
       }
-      let InstanceTypeDisplay;
-      let InstanceIdDisplay;
-      let InstanceStatusDisplay;
-      if(this.props.activeNode.InstanceId){
-        InstanceTypeDisplay = "EC2";
-        InstanceIdDisplay = this.props.activeNode.InstanceId;
-        InstanceStatusDisplay = this.props.activeNode.State.Name;
-      } else if (this.props.activeNode.DBInstanceStatus){
-        InstanceTypeDisplay = "RDS";
-        InstanceIdDisplay = this.props.activeNode.DBInstanceIdentifier;
-        InstanceStatusDisplay = this.props.activeNode.DBInstanceStatus;
-      } else if (this.props.activeNode.get_region_s3){
-        InstanceTypeDisplay = "S3";
-      } else{
-        InstanceTypeDisplay = 'Lambda';
-        InstanceIdDisplay = this.props.activeNode.FunctionName;
-        InstanceStatusDisplay = this.props.activeNode.TracingConfig.Mode;
-      }
+
       NodeDetails = (
         <div id="details-wrapper">
           <Collapsible trigger="Node Summary" open="true">
-        <RunStopInstances activeNode={this.props.activeNode} />
             {sgmodal}
             <p>
               <span className="sidebar-title">Instance Type: </span>
