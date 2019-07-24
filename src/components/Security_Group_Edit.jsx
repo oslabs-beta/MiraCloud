@@ -19,7 +19,6 @@ class Security_Group_Edit extends Component {
   }
 
   getSgTotal(){
-    console.log("this is sgData from getSgTotal", this.props.sgData);
     const {sgData} = this.props;
     const groupIds = [];
     for (let i = 0; i < sgData.length; i++) {
@@ -127,7 +126,7 @@ class Security_Group_Edit extends Component {
       return new Promise((resolve, reject)=>{
         ec2.authorizeSecurityGroupEgress(paramsOut, function(err, data) {
           if(err) {
-            console.log("Data not inputted in correct format", err, err.stack); // an error occurred
+            console.log("Data not inputed in correct format", err, err.stack); // an error occurred
             reject(err);
           }
           resolve(); 
@@ -163,7 +162,6 @@ class Security_Group_Edit extends Component {
         editSGPromisesIn()
           .then(result => {
             this.props.onRequestClose();
-            console.log("Got the result: " + result);
           })
           .catch(function(err) {
             alert(err);
@@ -172,20 +170,17 @@ class Security_Group_Edit extends Component {
         editSGPromisesOut()
           .then(() => {
             this.props.onRequestClose();
-            // console.log('Got the result: ' + result);
           })
           .catch(function(err) {
             alert(err);
           });
       } else {
-        // console.log('its here');
         editSGPromisesIn()
           .then(() => {
             editSGPromisesOut();
           })
           .then(() =>{ 
             this.props.onRequestClose();
-            // console.log('Got the result: ' + result);
           })
           .catch(function(err) {
             alert(err);
@@ -202,7 +197,6 @@ class Security_Group_Edit extends Component {
         revokeSGPromisesIn()
           .then(result => {
             this.props.onRequestClose();
-            console.log("Got the result: " + result);
           })
           .catch(function(err) {
             alert(err);
@@ -211,20 +205,17 @@ class Security_Group_Edit extends Component {
         revokeSGPromisesIn()
           .then(() => {
             this.props.onRequestClose();
-            // console.log('Got the result: ' + result);
           })
           .catch(function(err) {
             alert(err);
           });
       } else {
-        // console.log('its here');
         revokeSGPromisesIn()
           .then(() => {
             revokeSGPromisesOut();
           })
           .then(() => {
             this.props.onRequestClose();
-            // console.log('Got the result: ' + result);
           })
           .catch(function(err) {
             alert(err);

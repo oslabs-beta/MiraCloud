@@ -50,7 +50,6 @@ const mapDispatchToProps = dispatch => ({
 class App extends Component{
 
   render(){
-    console.log(this.props);
     let display = [];
     let loginWelcome = <FlexLogin loginKey={this.props.loginKey} logIn={this.props.logIn}/>;
     display.push(<Menu activeNode={this.props.activeNode} publicKey={this.props.publicKey} privateKey={this.props.privateKey} getAWSInstances={this.props.getAWSInstances} currentRegion={this.props.currentRegion} getAllRegions={this.props.getAllRegions} />);
