@@ -197,12 +197,23 @@ class InstanceCreator extends Component {
       })
     };
     checkSG()
-    .then(()=>{deleteEC2()})
-    .then(()=>{deleteSG(regionStr, activeNode.SecurityGroups[0].GroupId)})
-    .then((data)=>{
-      console.log(data);
-      this.props.onRequestClose();
-    })
+	.then(()=>{
+		deleteEC2()
+		.then(()=>{
+			deleteSG(regionStr, activeNode.SecurityGroups[0].GroupId)
+			})
+	})
+	.then((data)=>{
+		console.log(data);
+		this.props.onRequestClose();
+	  })
+	.catch(function(err){
+		alert(err);
+	})
+    // .then((data)=>{
+    //   console.log(data);
+    //   this.props.onRequestClose();
+    // })
     .catch(function(err){
       alert(err);
     });
