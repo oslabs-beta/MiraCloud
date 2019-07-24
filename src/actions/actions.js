@@ -320,7 +320,7 @@ export const getAWSInstances = (region, key1, key2) => {
             Promise.all(inPromiseArr).then(() => {
               mainResolve();
             })
-          }).catch((err) => console.log('show me the err', err))
+          }).catch((err) => console.log('error: ', err))
       }));
 
       //get Lambda data in a specific region
@@ -329,14 +329,8 @@ export const getAWSInstances = (region, key1, key2) => {
         lambda.listFunctions(function(err, data){
           if(err) reject(err);
           else{
-            console.log('lambda region:', data);
             for(let i = 0; i < data.Functions.length; i++){
-              console.log('data function of i: ',data.Functions[i]);
-              console.log('og Region state obj: ', regionState);
-              console.log('inside region state: ', Object.keys(regionState));
               for(let key in regionState){
-                console.log('key', key);
-                console.log('vps Region state obj: ', regionState[key]);
                 if(!regionState[key]['Lambda'])regionState[key]['Lambda'] = {};
                 regionState[key]['Lambda'][data.Functions[i].FunctionName] = data.Functions[i]
               }
@@ -351,7 +345,6 @@ export const getAWSInstances = (region, key1, key2) => {
     .then(()=>{
       getLambdas()
       .then((values) => {
-        console.log('values', values);
         const edgeTable = {};
         for (let i = 0; i < sgRelationships.length; i++) {
           sgNodeCorrelations[sgRelationships[i][0]].forEach((val1, val2, set) => {
