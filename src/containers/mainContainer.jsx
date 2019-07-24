@@ -18,7 +18,7 @@ class MainContainer extends Component{
           edgeTable= {this.props.edgeTable}/>
           {/* sgRelationships={this.props.sgRelationships}
           sgNodeCorrelations={this.props.sgNodeCorrelations}/> */}
-          <Side_Panel regionData={this.props.regionData} activeNode={this.props.activeNode}/>
+          <Side_Panel currentRegion={this.props.currentRegion} regionData={this.props.regionData} activeNode={this.props.activeNode}/>
         </div>
     )
   }

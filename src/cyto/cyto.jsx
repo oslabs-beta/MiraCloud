@@ -32,8 +32,8 @@ class Cyto extends PureComponent {
         // creates new cytoscape object and sets format for graph
         this.cy = cytoscape({
             container: document.getElementById('cy'),
-            boxSelectionEnabled: false,
-            autounselectify: true,
+            boxSelectionEnabled: true,
+            autounselectify: false,
             // styling format for each element of the object (nodes, edges, etc.)
             style: cytoscape.stylesheet()
                 .selector('node')
@@ -116,7 +116,14 @@ class Cyto extends PureComponent {
                 .css({
                     'border-style': 'dotted'
                 })
-
+                .selector('.S3') 
+                .css({
+                    'border-color': '#2563FF' //change S3 Border Color
+                })
+                .selector(':selected')
+                .css({
+                    'border-color': '#D69BFF' // change selected border color
+                })
         });
         /**
          *  VPCs just pass in the id
@@ -128,6 +135,7 @@ class Cyto extends PureComponent {
         this.cy.on('tap', 'node', function (evt) {
             getNodeFunction(getStateNodes[this.id()]);
         })
+
     }
     // invokes the function to create object
     componentDidMount() {
@@ -152,7 +160,7 @@ class Cyto extends PureComponent {
         // iterate through everything in state to gather VPC, availability zone, EC2 and RDS instances and creating nodes for each
         for (let vpc in this.props.regionData) {
             let vpcObj = this.props.regionData[vpc];
-
+            console.log('VPCVPC VPC', vpc, 'regionData', this.props.regionData);
             
             if (vpcObj.hasOwnProperty("region") && !this.state.regions.has(vpcObj.region)) {
                 this.cy.add(new Region(vpcObj.region).getRegionObject());
@@ -163,7 +171,7 @@ class Cyto extends PureComponent {
 
             for (let az in vpcObj) {
                 console.log('AZONEEE', az);
-                if (az !== "region" && az !== "S3") this.cy.add(new AvailabilityZone(az, vpcObj.region + "-" + vpc).getAvailabilityZoneObject());
+                if (az !== "region" && az !== "S3" && az !== "S3Data") this.cy.add(new AvailabilityZone(az, vpcObj.region + "-" + vpc).getAvailabilityZoneObject());
                 // EC2 instance
                 let ec2Instances = vpcObj[az].EC2;
                 for (let ec2s in ec2Instances) {
@@ -198,7 +206,9 @@ class Cyto extends PureComponent {
             if (s3Instances){
                 for (let i = 0; i < s3Instances.length; i++){
                     this.cy.add(new S3(s3Instances[i], vpcObj.region + "-" + vpc, null).getS3Object());
+                    console.log('V P C', vpc);
                     this.state.nodes[s3Instances[i]] = [s3Instances[i], "S3", vpcObj.region, vpc];
+
                 }
             }
         }
