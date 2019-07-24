@@ -6,6 +6,7 @@ body{
   font-family: $title-font;
   background-color: $bg-color;
 }
+
 #app{
   background-color: $bg-color;
 }
@@ -230,8 +231,8 @@ h1, h2, h3, h4{
 }
 
 #create_button{
-  width: 16vw;
-  height: 5vh;
+  width: 12em;
+  height: 3em;
   font-size: .8em;
   border-radius: 6px;
   margin: 0 auto 10px 40px;
@@ -361,3 +362,4 @@ h1, h2, h3, h4{
   border-bottom: 1px solid white;
   font-family: 'Montserrat', sans-serif;
 }
+
