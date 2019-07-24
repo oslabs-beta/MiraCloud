@@ -256,8 +256,9 @@ class InstanceCreator extends Component {
 	  let imgOptions = [];
 	  for(let key in inAllRegions){
 		  imgOptions.push(<option value={key}>{inAllRegions[key]}</option>)
-	  }
-  	let displayCreate = [<form>
+		}
+		// launch instance button
+  	let displayCreate = [<form id="form_modal">
 			<div id='create_instance'>Create New Instance:
 				<div id='instance_id'>
 					EC2
@@ -270,24 +271,25 @@ class InstanceCreator extends Component {
 			</select>
 			</div>
 		<div id='key_pair'>Key Pair Name:
-			<input type="text" ref={input => (this.keyPair = input)}/>
+			<input id='key_input' type="text" ref={input => (this.keyPair = input)}/>
 		</div>
 		<br />
         <button id='create_button'onClick={this.handleSubmit}>Create Instance</button>
 	  </form>];
-	  
-  let displayDelete = [<div><h4>Selected Node:</h4>
-  <select id="instance" ref={input =>(this.type = input)}>
-      <option value="EC2">EC2</option>
-      <option value="RDS">RDS</option>
-  </select>
-  <input ref={input => (this.source = input)} defaultValue={this.props.activeNode.InstanceId ? this.props.activeNode.InstanceId : this.props.activeNode.DBInstanceIdentifier}/>
-  <button onClick={(e)=>{this.deleteInstance()}}>Delete</button>
-  </div>]
+		
+		// delete instance button
+		let displayDelete = [<div><div id='select_node'>Selected Node:</div>
+		<select id="instance" ref={input =>(this.type = input)}>
+				<option value="EC2">EC2</option>
+				<option value="RDS">RDS</option>
+		</select>
+		<input ref={input => (this.source = input)} defaultValue={this.props.activeNode.InstanceId ? this.props.activeNode.InstanceId : this.props.activeNode.DBInstanceIdentifier}/>
+		<button id='deleteButton' onClick={(e)=>{this.deleteInstance()}}>Delete</button>
+		</div>]
 return (
-	<div id="InstanceModal">
-        {this.props.delete ?  displayDelete : displayCreate}
-    </div>
+		<div id="InstanceModal">
+					{this.props.delete ?  displayDelete : displayCreate}
+		</div>
 )
   }
 }

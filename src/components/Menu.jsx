@@ -109,8 +109,8 @@ class Menu extends Component {
             <Select id='select-menu' value={this.state.selectedOption} onChange={handleChange} options={options}/>
             <button id="refresh" onClick={refresh}><img id="refreshimg" src="../src/assets/refresh_1.png"/></button> 
             <Modal isOpen={this.state.modalIsOpen} onRequestClose={this.closeModal} style={customStyles} contentLabel="Instance Modal">
+              <button id='close_button' onClick={this.closeModal}><img id="close" src="../src/assets/close.png"/></button>
               <InstanceCreator selectedRegion={this.state.selectedOption} delete={this.state.delete} activeNode={this.props.activeNode} onRequestClose={this.closeModal}/>
-              <button onClick={this.closeModal}>close</button>
             </Modal>
           </div>
           <div id='instanceButton'>
