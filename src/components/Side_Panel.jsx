@@ -4,6 +4,7 @@ import SecGroupEdit from './Security_Group_Edit';
 import Modal from 'react-modal';
 import Collapsible from 'react-collapsible';
 // import {Switch, BrowserRouter as Router, Route, NavLink, withRouter } from 'react-router-dom';
+import RunStopInstances from './RunStopInstances'
 
 const customStyles = {
   content: {
@@ -24,12 +25,14 @@ class Side_Panel extends Component {
       modalIsOpen: false,
       delete: false
     };
+    
     this.delete = this.delete.bind(this);
     this.openModal = this.openModal.bind(this);
     this.afterOpenModal = this.afterOpenModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
     this.analyzeSecurityGroups = this.analyzeSecurityGroups.bind(this);
   }
+
 
   delete() {
     this.setState({delete: true});
@@ -45,8 +48,9 @@ class Side_Panel extends Component {
   }
 
   closeModal() {
-    this.setState({ modalIsOpen: false, delete: false });
+    this.setState({ modalIsOpen: false, delete: false});
   }
+
 
   analyzeSecurityGroups(securityGroup) {
     let ids = [];
@@ -100,11 +104,7 @@ class Side_Panel extends Component {
           "Node Details": this.props.activeNode
         }
       }
-      // let nodeData = {
-      //   "Node Details": this.props.activeNode,
-      //   "Security Group Details": this.props.activeNode.MySecurityGroups
-      // };
-      // console.log("fdsjfdhsjk", securityGroupNames);
+
       if(this.props.currentRegion !== 'all') {
         sgmodal =(
           <div>
@@ -114,10 +114,6 @@ class Side_Panel extends Component {
           <button
           id="deleteBtn"
           onClick={() => {
-            // console.log(
-            //   "this is current delete statement =>",
-            //   this.state.delete
-            // );
             this.delete();
             this.openModal();
           }}
@@ -126,11 +122,11 @@ class Side_Panel extends Component {
         </button>
         </div>
         );
-     }
+      }
       let sgDetails = [];
       if (securityGroupNames){
         sgDetails.push(
-        <div>
+          <div>
         <p>
           <span className="sidebar-title">Security Groups: </span>
           <span>
@@ -170,6 +166,7 @@ class Side_Panel extends Component {
       NodeDetails = (
         <div id="details-wrapper">
           <Collapsible trigger="Node Summary" open="true">
+        <RunStopInstances activeNode={this.props.activeNode} />
             {sgmodal}
             <p>
               <span className="sidebar-title">Instance Type: </span>
@@ -210,8 +207,8 @@ class Side_Panel extends Component {
       <div id="sidePanel">
         {sidePanelWelcome}
         <Modal isOpen={this.state.modalIsOpen} onAfterOpen={this.afterOpenModal} onRequestClose={this.closeModal} style={customStyles} contentLabel="Example Modal">
-          <SecGroupEdit sgData={this.props.activeNode.MySecurityGroups} onRequestClose={this.closeModal} delete={this.state.delete}/>
-          <button onClick={this.closeModal}>Close</button>
+         <SecGroupEdit sgData={this.props.activeNode.MySecurityGroups} onRequestClose={this.closeModal} delete={this.state.delete}/>
+         <button onClick={this.closeModal}>Close</button>
         </Modal>
         {NodeDetails}
       </div>

@@ -110,8 +110,8 @@ class Menu extends Component {
             <InstanceCreator selectedRegion={this.state.selectedOption} delete={this.state.delete} activeNode={this.props.activeNode} onRequestClose={this.closeModal}/>
             <button onClick={this.closeModal}>close</button>
           </Modal>
-          <button id='deleteInstance' onClick={(e)=>{this.openModal('delete')}}>Delete</button>
-          <button id='createInstance' onClick={(e)=>{this.openModal('create')}}>Launch</button>
+          <button id='createInstance' onClick={(e)=>{this.openModal('create')}}>Launch EC2 Instance</button>
+          <button id='deleteInstance' onClick={(e)=>{this.openModal('delete')}}>Delete Instance</button>  
         </div>
       </div>
     );
