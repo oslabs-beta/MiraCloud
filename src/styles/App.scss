@@ -35,8 +35,8 @@ body{
 #sidePanel{
   width: $side-bar-width;
   word-wrap: break-word;
-  border-left: 1px outset $border-color;
-  border-radius: 5px;
+  border-left: 2px outset $side-panel;
+  // border-radius: 5px;
 }
 #sidePanel p{
   padding-left:10px;
@@ -46,12 +46,11 @@ body{
 #refresh{
   position: relative;
   background-color: white;
-  // margin-right: #{$side-bar-width};
-  margin-left:20px;
-  height:36px;
-  width:50px;
+  height: 36px;
+  width: 50px;
   border-radius: 5px;
-  margin: 10px 10px;
+  margin: 10px;
+  border: 2px solid #6a9adc;
 }
 
 #refreshimg{
@@ -102,6 +101,36 @@ h1, h2, h3, h4{
   margin: 103px auto 10px 85px;
 }
 
+#createInstance, #deleteInstance{
+  font-family: 'Montserrat', sans-serif;
+  height: 40px;
+  font-size: 12px;
+  font-weight: bold;
+  border-radius: 5px;
+}
+
+#createInstance{
+  margin-right: 10px;
+  border: 2px solid #5d80ad;
+  background: #5d80ad;
+  color: white;
+}
+
+#deleteInstance{
+  background: #d4c4e2;
+  color: black;
+  border: 2px solid #d4c4e2;
+}
+
+#instanceButton{
+  margin: 10px;
+}
+
+#launch, #delete{
+  height: 1vh;
+  margin-right: 1vw;
+}
+
 #mira-description{
   color: white;
   font-style: italic;
@@ -142,6 +171,23 @@ h1, h2, h3, h4{
 
 .sidebar-title{
   font-weight:bold;
+}
+
+#person{
+  height: 2vh;
+  margin-right: 7px;
+}
+
+::placeholder {
+  color: white;
+}
+
+#logout_text{
+  font-size: 1em;
+  color: white;
+  margin: 10px;
+  cursor: pointer;
+  font-family: 'Montserrat', sans-serif;
 }
 
 #logout{
@@ -230,12 +276,17 @@ h1, h2, h3, h4{
   background-color: $top-menu;
 }
 
+#region_area{
+  display: flex;
+}
+
 #bottom-menu{
-  height: 40px;
+  height: 50px;
   max-width: 100%;
   display: flex;
+  justify-content: space-between;
   flex-direction: row;
   padding: 10px;
-  border-top: 1px solid white;
+  border-bottom: 1px solid white;
   font-family: 'Montserrat', sans-serif;
 }

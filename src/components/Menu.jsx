@@ -100,19 +100,23 @@ class Menu extends Component {
       <div id="Menu">
         <div id='top-menu'>
           <img id='small_logo' src="../src/assets/mira_white.png" />
-          <button id="logout" onClick={handleLogOut}>Log Out</button>
+          <a id='logout_text' onClick={handleLogOut}><img id="person" src="../src/assets/person.png"/>Log Out</a>
         </div>
         {/* select component for html in react jsx */}
         <div id='bottom-menu'>
-          <h4>Choose a region:</h4>
-          <Select id='select-menu' value={this.state.selectedOption} onChange={handleChange} options={options}/>
-          <button id="refresh" onClick={refresh}><img id="refreshimg" src="../src/assets/refresh_1.png"/></button> 
-          <Modal isOpen={this.state.modalIsOpen} onRequestClose={this.closeModal} style={customStyles} contentLabel="Instance Modal">
-            <InstanceCreator selectedRegion={this.state.selectedOption} delete={this.state.delete} activeNode={this.props.activeNode} onRequestClose={this.closeModal}/>
-            <button onClick={this.closeModal}>close</button>
-          </Modal>
-          <button id='createInstance' onClick={(e)=>{this.openModal('create')}}>Launch EC2 Instance</button>
-          <button id='deleteInstance' onClick={(e)=>{this.openModal('delete')}}>Delete Instance</button>  
+          <div id='region_area'>
+            <h4>Choose a region:</h4>
+            <Select id='select-menu' value={this.state.selectedOption} onChange={handleChange} options={options}/>
+            <button id="refresh" onClick={refresh}><img id="refreshimg" src="../src/assets/refresh_1.png"/></button> 
+            <Modal isOpen={this.state.modalIsOpen} onRequestClose={this.closeModal} style={customStyles} contentLabel="Instance Modal">
+              <InstanceCreator selectedRegion={this.state.selectedOption} delete={this.state.delete} activeNode={this.props.activeNode} onRequestClose={this.closeModal}/>
+              <button onClick={this.closeModal}>close</button>
+            </Modal>
+          </div>
+          <div id='instanceButton'>
+            <button id='createInstance' onClick={(e)=>{this.openModal('create')}}><img id="launch" src="../src/assets/add.png"/>Launch EC2 Instance</button>
+            <button id='deleteInstance' onClick={(e)=>{this.openModal('delete')}}><img id="delete" src="../src/assets/delete.png"/>Delete Instance</button>  
+          </div>
         </div>
       </div>
     );
