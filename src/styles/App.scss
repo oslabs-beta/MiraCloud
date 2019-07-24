@@ -1,4 +1,5 @@
 @import "theme";
+@import url('https://fonts.googleapis.com/css?family=Montserrat&display=swap');
 
 body{
   margin: 0px;
@@ -6,9 +7,11 @@ body{
   background-color: $bg-color;
 }
 #app{
-  display:grid;
-  grid-template: 1fr;
   background-color: $bg-color;
+}
+
+#flex-card {
+  display: flex;
 }
 // #Menu{
 //   // border-bottom: 1px outset $border-color;
@@ -32,8 +35,8 @@ body{
 #sidePanel{
   width: $side-bar-width;
   word-wrap: break-word;
-  border-left: 1px outset $border-color;
-  border-radius: 5px;
+  border-left: 2px outset $side-panel;
+  // border-radius: 5px;
 }
 #sidePanel p{
   padding-left:10px;
@@ -43,19 +46,17 @@ body{
 #refresh{
   position: relative;
   background-color: white;
-  // margin-right: #{$side-bar-width};
-  margin-left:20px;
-  height:36px;
-  width:50px;
+  height: 36px;
+  width: 50px;
   border-radius: 5px;
-  margin: 10px 10px;
+  margin: 10px;
+  border: 2px solid #6a9adc;
 }
 
 #refreshimg{
   height:30px;
   width:30px;
 }
-
 
 #loading img{
   margin-top: 45vh;
@@ -95,10 +96,102 @@ h1, h2, h3, h4{
   width: 200px;
   margin: 10px 10px;
 }
-#welcome{
-  text-align: center;
-  padding-top: 12%;
+
+#select-img{
+  height: 4vh;
+  margin-left: 20px;
 }
+
+#instance{
+  height: 4vh;
+  margin-right: 5px;
+}
+
+#deleteButton{
+  height: 4vh;
+  margin-left: 10px;
+}
+
+#welcome_card{
+  margin: 103px auto 10px 85px;
+}
+
+#createInstance, #deleteInstance{
+  font-family: 'Montserrat', sans-serif;
+  height: 40px;
+  font-size: 12px;
+  font-weight: bold;
+  border-radius: 5px;
+}
+
+#createInstance{
+  margin-right: 10px;
+  border: 2px solid #5d80ad;
+  background: #5d80ad;
+  color: white;
+}
+
+#select_node{
+  color: black;
+}
+
+#close_button{
+  margin: 0 auto 10px 230px;
+  border: none;
+}
+
+#close{
+  height: 3vh;
+}
+
+#instance_id{
+  margin-left: 20px;
+  font-weight: bold;
+}
+
+#form_modal{
+  margin: 10px auto 10px 15px;
+}
+
+#deleteInstance{
+  background: #d4c4e2;
+  color: black;
+  border: 2px solid #d4c4e2;
+}
+
+#instanceButton{
+  margin: 10px;
+}
+
+#launch, #delete{
+  height: 1vh;
+  margin-right: 1vw;
+}
+
+#mira-description{
+  color: white;
+  font-style: italic;
+  margin-left: 40px;
+  margin-top: 18px;
+  font-family: 'Montserrat', sans-serif;
+}
+
+#key_pair{
+  margin-top: 20px;
+}
+
+#key_input{
+  margin-left: 10px;
+  height: 3vh;
+}
+
+#welcome_to{
+  color: white;
+  font-family: Calibri;
+  font-size: 1.7em;
+  margin-bottom: 1.7vh;
+}
+
 #side-panel-welcome{
   color: $light-font-color;
   text-align: center;
@@ -126,20 +219,73 @@ h1, h2, h3, h4{
   font-weight:bold;
 }
 
+#person{
+  height: 2vh;
+  margin-right: 7px;
+}
+
+#create_instance{
+  display: flex;
+
+}
+
+#create_button{
+  width: 16vw;
+  height: 5vh;
+  font-size: .8em;
+  border-radius: 6px;
+  margin: 0 auto 10px 40px;
+  border: 2px solid #5d80ad;
+  background: #5d80ad;
+  color: white;
+}
+
+#key__pair{
+  text-align: center;
+  font-weight: bold;
+}
+
+::placeholder {
+  color: white;
+}
+
+#logout_text{
+  font-size: 1em;
+  color: white;
+  margin: 10px;
+  cursor: pointer;
+  font-family: 'Montserrat', sans-serif;
+}
+
 #logout{
   position: relative;
-  margin-left: 530px;
+  /* margin-left: 530px; */
   height: 36px;
+  border: 1px solid #1b1b1b;
   width: 90px;
+  background-color: white;
   border-radius: 5px;
-  margin-left: 76%;
 }
 
 #loginContainer{
-  height: 90px;
-  flex-direction: column;
+  border: 1px solid white;
+  width: 60%;
+  background-color: #1b1b1b;
+  height: 90vw;
+}
+
+#welcome{
+  background-color: #5073a8;
+  width: 67%;
+  padding-top: 12%;
+}
+
+#input_keys{
+  height: 80%;
   display: flex;
-  margin: 20% auto 50% 35%;
+  flex-direction: column;
+  margin: 200px auto 20px 30px;
+  color: white;
 }
 
 #login_keys{  
@@ -147,8 +293,40 @@ h1, h2, h3, h4{
 }
 
 #accessKeys{
-  height: 28px;
+  height: 40px;
   margin: 4% auto 6% 8%;
+  color: white;
+  font-size: 1em;
+  background: #1b1b1b;
+  width: 36vw;
+  font-weight: bold; 
+  border: none;
+  border-bottom: 1px solid white;
+}
+
+#login_button{
+  width: 37%;
+  height: 4.7vw;
+  border-radius: 1.5vw;
+  font-size: 1em;
+  margin: 20px auto 20px 110px;
+  font-weight: bolder;
+  /* border-color: #6a9adc; */
+  border-color: #121212;
+  color: #252525;
+  background-color: #75a2e6;
+}
+
+#keys{
+  height: 2vw;
+  margin-right: 8px;
+}
+#keys_label{
+  font-size: 1.2em;
+  font-weight: bolder;
+  margin-right: 8px;
+  height: 18px !important;
+  margin: 10px auto 10px 40px;
 }
 
 #small_logo{
@@ -160,14 +338,26 @@ h1, h2, h3, h4{
   max-width: 100%;
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
   padding: 10px;
+  background-color: $top-menu;
+}
+
+#region_image{
+  margin-top: 20px;
+}
+
+#region_area{
+  display: flex;
 }
 
 #bottom-menu{
-  height: 40px;
+  height: 50px;
   max-width: 100%;
   display: flex;
+  justify-content: space-between;
   flex-direction: row;
   padding: 10px;
-  border-top: 1px solid white;
+  border-bottom: 1px solid white;
+  font-family: 'Montserrat', sans-serif;
 }
