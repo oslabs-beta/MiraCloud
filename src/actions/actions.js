@@ -198,6 +198,8 @@ export const getAWSInstances = (region, key1, key2) => {
         }
       });
     })));
+
+    //get S3 data
     apiPromiseArray.push( new Promise((mainResolve, mainReject) => {
       axios({
         method: 'post',
@@ -295,7 +297,7 @@ export const getAWSInstances = (region, key1, key2) => {
                   let regionOfBucket = resultObjFromQuery.data.data.aws.s3.get_region_s3.LocationConstraint;
                   // compiling it all into the data
   
-                  if ( region === regionOfBucket) {
+                  if (region === regionOfBucket) {
                     for (let theOnlyVPC in regionState) {
                       if (regionState[theOnlyVPC]['S3']){
                         regionState[theOnlyVPC]['S3'].push(currBucketName);
@@ -321,30 +323,58 @@ export const getAWSInstances = (region, key1, key2) => {
           }).catch((err) => console.log('show me the err', err))
       }));
 
+      //get Lambda data in a specific region
+      function getLambdas(){ return new Promise((resolve, reject)=>{
+        let lambda = new AWS.Lambda();
+        lambda.listFunctions(function(err, data){
+          if(err) reject(err);
+          else{
+            console.log('lambda region:', data);
+            for(let i = 0; i < data.Functions.length; i++){
+              console.log('data function of i: ',data.Functions[i]);
+              console.log('og Region state obj: ', regionState);
+              console.log('inside region state: ', Object.keys(regionState));
+              for(let key in regionState){
+                console.log('key', key);
+                console.log('vps Region state obj: ', regionState[key]);
+                if(!regionState[key]['Lambda'])regionState[key]['Lambda'] = {};
+                regionState[key]['Lambda'][data.Functions[i].FunctionName] = data.Functions[i]
+              }
+            }
+            resolve();
+          }
+        })
+      })}
+
     // once all the promise's are resolved, dispatch the data to the reducer
-    Promise.all(apiPromiseArray).then((values) => {
-      const edgeTable = {};
-      for (let i = 0; i < sgRelationships.length; i++) {
-        sgNodeCorrelations[sgRelationships[i][0]].forEach((val1, val2, set) => {
-          sgNodeCorrelations[sgRelationships[i][1]].forEach((value1, value2, set2) => {
-            if (!edgeTable.hasOwnProperty(val1)) edgeTable[val1] = new Set();
-            edgeTable[val1].add(value1);
+    Promise.all(apiPromiseArray)
+    .then(()=>{
+      getLambdas()
+      .then((values) => {
+        console.log('values', values);
+        const edgeTable = {};
+        for (let i = 0; i < sgRelationships.length; i++) {
+          sgNodeCorrelations[sgRelationships[i][0]].forEach((val1, val2, set) => {
+            sgNodeCorrelations[sgRelationships[i][1]].forEach((value1, value2, set2) => {
+              if (!edgeTable.hasOwnProperty(val1)) edgeTable[val1] = new Set();
+              edgeTable[val1].add(value1);
+            });
           });
+        }
+        //
+        dispatch({
+          type: actionTypes.GET_AWS_INSTANCES,
+          payload: {
+            regionState,
+            currentRegion: region,
+            edgeTable,
+            // sgNodeCorrelations: sgNodeCorrelations,
+            // sgRelationships: sgRelationships
+          },
         });
-      }
-      //
-      dispatch({
-        type: actionTypes.GET_AWS_INSTANCES,
-        payload: {
-          regionState,
-          currentRegion: region,
-          edgeTable,
-          // sgNodeCorrelations: sgNodeCorrelations,
-          // sgRelationships: sgRelationships
-        },
+        dispatch(getAWSInstancesFinished());
       });
-      dispatch(getAWSInstancesFinished());
-    });
+    })
   };
 };
 
