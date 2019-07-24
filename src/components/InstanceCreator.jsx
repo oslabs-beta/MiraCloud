@@ -257,20 +257,22 @@ class InstanceCreator extends Component {
 	  }
     // console.log('active node: ', this.props.activeNode);
   	let displayCreate = [<form>
-        <div>Create New Instances</div>
-        <select id="instance" onChange={this.change} value={this.state.value}>
-          <option value="select">Select Instance</option>
-          <option value="EC2">EC2</option>
-        </select>
-		<p>Region Image Id:</p>
-		<select id='select-img' defaultValue={imageId[AWS.config.region]} onChange={e => this.changeRegion(e)}>
-			{imgOptions}
-		</select>
+			<div id='create_instance'>Create New Instance:
+				<div id='instance_id'>
+					EC2
+				</div>
+			</div>
+				{/* <span id="instance" onChange={this.change} value={this.state.value}> */}
+			<div id='region_image'>Region Image Id:
+			<select id='select-img' defaultValue={imageId[AWS.config.region]} onChange={e => this.changeRegion(e)}>
+				{imgOptions}
+			</select>
+			</div>
+		<div id='key_pair'>Key Pair Name:
+			<input type="text" ref={input => (this.keyPair = input)}/>
+		</div>
 		<br />
-		<p>Key Pair Name:</p>
-		<input type="text" ref={input => (this.keyPair = input)}/>
-		<br />
-        <button onClick={this.handleSubmit}>Create Instance</button>
+        <button id='create_button'onClick={this.handleSubmit}>Create Instance</button>
 	  </form>];
 	  
   let displayDelete = [<div><h4>Selected Node:</h4>

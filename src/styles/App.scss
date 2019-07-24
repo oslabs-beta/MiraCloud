@@ -97,6 +97,10 @@ h1, h2, h3, h4{
   margin: 10px 10px;
 }
 
+#select-img{
+  height: 5vh;
+}
+
 #welcome_card{
   margin: 103px auto 10px 85px;
 }
@@ -114,6 +118,10 @@ h1, h2, h3, h4{
   border: 2px solid #5d80ad;
   background: #5d80ad;
   color: white;
+}
+
+#instance_id{
+  text-align:center;
 }
 
 #deleteInstance{
@@ -176,6 +184,23 @@ h1, h2, h3, h4{
 #person{
   height: 2vh;
   margin-right: 7px;
+}
+
+#create_instance{
+  display: flex;
+
+}
+
+#create_button{
+  width: 16vw;
+  height: 4vh;
+  border-radius: 6px;
+  margin: 0 auto 10px 50px;
+}
+
+#key__pair{
+  text-align: center;
+  font-weight: bold;
 }
 
 ::placeholder {
