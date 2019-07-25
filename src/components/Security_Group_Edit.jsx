@@ -13,7 +13,6 @@ class Security_Group_Edit extends Component {
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    // this.handleInOut = this.handleInOut.bind(this);
     this.getSgTotal = this.getSgTotal.bind(this);
     this.checkSource = this.checkSource.bind(this);
   }
@@ -410,7 +409,7 @@ class Security_Group_Edit extends Component {
     return (
       <div id="modal-table">
         <form onSubmit={this.handleSubmit}>
-          {!this.props.delete ? (<h2> Edit Inbound and Outbound Security Groups</h2>) : (<h2>Delete Security Rules</h2>)}
+          {!this.props.delete ? (<h2> Add Security Group Rules</h2>) : (<h2>Delete Security Group Rules</h2>)}
           <table>
             <tr>
               <th>Inbound: </th>
