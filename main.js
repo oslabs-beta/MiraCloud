@@ -37,7 +37,7 @@ ipcMain.on('createKeyPair', ((event, data) => {
   // path to root
   const homedir = require('os').homedir();
   // create file in desktop 
-  fs.writeFileSync(homedir + `/Desktop/${data.KeyName}.pem`,data.KeyMaterial);
+  fs.writeFileSync(homedir + `/Downloads/${data.KeyName}.pem`,data.KeyMaterial);
   event.returnValue = 'done';
 }));
 
