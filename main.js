@@ -32,6 +32,15 @@ ipcMain.on('logIn', (event, arg) => {
   event.returnValue = 'done';
 })
 
+// save .pem file with KeyPair information in it 
+ipcMain.on('createKeyPair', ((event, data) => {
+  // path to root
+  const homedir = require('os').homedir();
+  // create file in desktop 
+  fs.writeFileSync(homedir + `/Desktop/${data.KeyName}.pem`,data.KeyMaterial);
+  event.returnValue = 'done';
+}));
+
 // logout-Delete credentials file and folder
 ipcMain.on('logOut', (event, arg ) => {
   const homedir = require('os').homedir() + '/.aws';
