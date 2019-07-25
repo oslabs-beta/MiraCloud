@@ -21,7 +21,7 @@ const mapStateToProps = store => ({
   finishedFlag: store.graph.fetched,
   publicKey: store.login.awsPublicKey,
   privateKey: store.login.awsPrivateKey,
-  loginKey: false //store.login.loginKey
+  loginKey: store.login.loginKey
 })
 
 const mapDispatchToProps = dispatch => ({

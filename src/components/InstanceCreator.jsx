@@ -75,7 +75,7 @@ class InstanceCreator extends Component {
 		let sg = this.state.sg;
 		if (this.state.value === "S3") {
 			function createBucket(name){
-				if(!name) {alert("Add bucket name") ;return}
+				if(!name) {alert("Add bucket name")}
 				const params = { Bucket: name };		
 				return new Promise((resolve, reject) => {
 					s3.createBucket(params, function(err, data) {
@@ -157,7 +157,7 @@ class InstanceCreator extends Component {
 				.then(() => launchWithKeyPair(this.keyPair.value))
 				.then(data => ipcRenderer.sendSync('createKeyPair', data))
 				.then(() => createEC2Instance())
-				.then(() => alert(`EC2 Instance Successfully launched in ${AWS.config.region}.Please refresh page.`))
+				.then(() => alert(`EC2 Instance Successfully launched in ${AWS.config.region}.File with Key Pair credentials has been downloaded to your "Downloads" folder. Please refresh page.`))
 				.then(() => delete params["KeyName"])
 				.then(() => this.props.onRequestClose())
 				.catch(err => alert(err))
@@ -289,7 +289,7 @@ class InstanceCreator extends Component {
 	  imgOptions.unshift(<option value="select">Select</option>)
 
   	let displayCreate = [<form>
-        <div>Create New Instances</div>
+        <div id='create_instance'>Create New Instances</div>
         <select id="instance" ref={input =>( this.instanceType = input)} onChange={this.change} value={this.state.value}>
           <option value="select">Select Instance</option>
           <option value="EC2">EC2</option>
@@ -297,36 +297,36 @@ class InstanceCreator extends Component {
         </select>
 		<br />
 		{this.state.value === "EC2" && 
-			<div>
-		        <p>Region Image Id:</p>	
+			<div id='bucket_S3'>
+		        <p id='region_image'>Region Image Id:</p>	
 				{/* if specific region haven't selected will give dropdown with image ids */}
 			  {this.props.selectedRegion.value === "all" ?
 				<select id='select-img' defaultValue="select" onChange={e => this.changeRegion(e)}> {imgOptions} </select>
 				// if specific region selected will give input with defaultvalue so user can launch there any image id 
 				: <input defaultValue = { imageId[AWS.config.region] } onChange={e => this.changeRegion} />
 			  }
-				<p>Key Pair Name:</p>
-				<input type="text" placeholder="Key pair name" ref={input => (this.keyPair = input)}/>
+				<p id='key_pair'>Key Pair Name:</p>
+				<input type="text" id='key_input' placeholder="Key pair name" ref={input => (this.keyPair = input)}/>
 			</div> 
 			}
 		  { this.state.value === "S3" &&
 			<div>
-				<p>S3 Bucket Name:</p>
-				<input type="text" placeholder="Bucket name" ref={input => (this.s3Name = input)} /> 
+				<div id='bucket_name_S3'>S3 Bucket Name:</div>
+				<input id='s3_bucket_name' type="text" placeholder="Bucket name" ref={input => (this.s3Name = input)} /> 
 			</div>
 		  }
 		  <br />
-		  <button onClick={this.handleSubmit}>Create Instance</button>
+		  <button id='create_button' onClick={this.handleSubmit}>Create Instance</button>
 	  </form>];
 	
 
-let displayDelete = [<div><h4>Selected Node:</h4>
-  <select id="instance" ref={input =>(this.type = input)}>
+let displayDelete = [<div id='delete_button'><div id='select-node'>Selected Node:</div>
+  <select id="node_drop" ref={input =>(this.type = input)}>
       <option value="EC2">EC2</option>
       <option value="RDS">RDS</option>
   </select>
-  <input ref={input => (this.source = input)} defaultValue={this.props.activeNode.InstanceId ? this.props.activeNode.InstanceId : this.props.activeNode.DBInstanceIdentifier}/>
-  <button onClick={(e)=>{this.deleteInstance()}}>Delete</button>
+  <input id='input_node' ref={input => (this.source = input)} defaultValue={this.props.activeNode.InstanceId ? this.props.activeNode.InstanceId : this.props.activeNode.DBInstanceIdentifier}/>
+  <button id='deleteButton' onClick={(e)=>{this.deleteInstance()}}>Delete Instance</button>
   </div>]
 return (
 	<div id="InstanceModal">

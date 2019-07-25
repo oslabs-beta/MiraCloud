@@ -208,7 +208,6 @@ class Side_Panel extends Component {
         {sidePanelWelcome}
         <Modal isOpen={this.state.modalIsOpen} onAfterOpen={this.afterOpenModal} onRequestClose={this.closeModal} style={customStyles} contentLabel="Example Modal">
          <SecGroupEdit sgData={this.props.activeNode.MySecurityGroups} onRequestClose={this.closeModal} delete={this.state.delete}/>
-         <button onClick={this.closeModal}>Close</button>
         </Modal>
         {NodeDetails}
       </div>

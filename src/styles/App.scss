@@ -97,19 +97,52 @@ h1, h2, h3, h4{
   margin: 10px 10px;
 }
 
+#s3_bucket_name{
+  margin: 10px auto 10px 53px;
+}
+
+#input-node{
+  margin: 10px auto 10px 60px;
+  height: 3vh;
+}
+
+#node_drop{
+  height: 6vh;
+  width: 5vw;
+  margin: 20px auto 10px 80px;
+}
+
+#select-node{
+  margin: 10px auto 10px 60px;
+}
+
 #select-img{
-  height: 4vh;
+  height: 6vh;
   margin-left: 20px;
 }
 
 #instance{
-  height: 4vh;
-  margin-right: 5px;
+  height: 5vh;
+  /* margin-right: 5px; */
+  /* width: 12vw; */
+  margin: 20px auto 10px 60px;
+  /* width: 13vw; */
+}
+
+#delete_button{
+  display: flex;
+  flex-direction: column;
 }
 
 #deleteButton{
   height: 4vh;
-  margin-left: 10px;
+  /* margin-left: 10px; */
+  background: #d4c4e2;
+  color: black;
+  font-size: 12px;
+  /* font-weight: bold; */
+  border-radius: 5px;
+  /* border: 2px solid #d4c4e2; */
 }
 
 #welcome_card{
@@ -224,20 +257,29 @@ h1, h2, h3, h4{
   margin-right: 7px;
 }
 
+#bucket_name_S3{
+  display: flex;
+  margin: 10px auto 10px 53px;
+}
+
+#bucket_S3{
+  margin: 10px auto 10px 53px;
+}
+
 #create_instance{
   display: flex;
-
+  margin: 10px auto 10px 53px;
 }
 
 #create_button{
-  width: 16vw;
-  height: 5vh;
-  font-size: .8em;
-  border-radius: 6px;
-  margin: 0 auto 10px 40px;
-  border: 2px solid #5d80ad;
-  background: #5d80ad;
-  color: white;
+  width: 60%;
+    height: 5vh;
+    font-size: .8em;
+    border-radius: 6px;
+    margin: 10px auto 10px 53px;
+    border: 2px solid #5d80ad;
+    background: #5d80ad;
+    color: white;
 }
 
 #key__pair{
@@ -278,6 +320,12 @@ h1, h2, h3, h4{
   background-color: #5073a8;
   width: 67%;
   padding-top: 12%;
+}
+
+#input_node{
+  margin: 10px auto 10px 20px;
+  width: 14vw;
+  height: 3vh;
 }
 
 #input_keys{
