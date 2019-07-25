@@ -6,6 +6,8 @@ import EC2 from './EC2'
 import VPC from './VPC'
 import RDS from './RDS'
 import S3 from './S3'
+import Lambda from './Lambda'
+
 import Region from './Region'
 import AvailabilityZone from './AvailabilityZone'
 // gives look/feel; type of graph
@@ -104,6 +106,18 @@ class Cyto extends PureComponent {
                     'text-margin-y': 5,
                     'background-height': '50px'
                 })
+                //lambda
+                .selector('.Lambda')
+                .css({
+                    'background-opacity':0,
+                    'background-image':'https://cdn.freebiesupply.com/logos/large/2x/aws-lambda-logo-png-transparent.png',
+                    'background-width-relative-to': 'inner',
+                    'background-height-relative-to': 'inner',
+                    'text-valign': 'bottom',
+                    'background-width': '50px',
+                    'text-margin-y': 5,
+                    'background-height': '50px'
+                })
                 .selector('.stopped')
                 .css({
                     'border-color': '#f77171',
@@ -115,6 +129,14 @@ class Cyto extends PureComponent {
                 .selector('.Region')
                 .css({
                     'border-style': 'dotted'
+                })
+                .selector('.Active')
+                .css({
+                    'border-color': '#8bf771',
+                })
+                .selector('.Passthrough')
+                .css({
+                    'border-color': '#f77171',
                 })
                 .selector('.S3') 
                 .css({
@@ -133,7 +155,7 @@ class Cyto extends PureComponent {
          */
         //check to see if you can access parent of the current node to pass into function
         this.cy.on('tap', 'node', function (evt) {
-            getNodeFunction(getStateNodes[this.id()]);
+            getNodeFunction(getStateNodes[`${this.id()}`]);
         })
 
     }
@@ -160,7 +182,6 @@ class Cyto extends PureComponent {
         // iterate through everything in state to gather VPC, availability zone, EC2 and RDS instances and creating nodes for each
         for (let vpc in this.props.regionData) {
             let vpcObj = this.props.regionData[vpc];
-            console.log('VPCVPC VPC', vpc, 'regionData', this.props.regionData);
             
             if (vpcObj.hasOwnProperty("region") && !this.state.regions.has(vpcObj.region)) {
                 this.cy.add(new Region(vpcObj.region).getRegionObject());
@@ -170,8 +191,7 @@ class Cyto extends PureComponent {
             this.cy.add(new VPC(vpc, vpcObj.region).getVPCObject());
 
             for (let az in vpcObj) {
-                console.log('AZONEEE', az);
-                if (az !== "region" && az !== "S3" && az !== "S3Data") this.cy.add(new AvailabilityZone(az, vpcObj.region + "-" + vpc).getAvailabilityZoneObject());
+                if (az !== "region" && az !== "S3" && az !== "S3Data" && az!=='Lambda') this.cy.add(new AvailabilityZone(az, vpcObj.region + "-" + vpc).getAvailabilityZoneObject());
                 // EC2 instance
                 let ec2Instances = vpcObj[az].EC2;
                 for (let ec2s in ec2Instances) {
@@ -182,8 +202,6 @@ class Cyto extends PureComponent {
                 let rdsInstances = vpcObj[az].RDS;
                 for (let rds in rdsInstances) {
                     this.cy.add(new RDS(rdsInstances[rds], vpcObj.region + "-" + vpc + "-" + az, null).getRDSObject());
-                    console.log('THIS IS CY', this.cy)
-                    console.log('STATE NODES', this.state.nodes);
                     this.state.nodes[rds] = [rds, "RDS", az, vpc];
                 }
                 // S3 instance
@@ -206,9 +224,15 @@ class Cyto extends PureComponent {
             if (s3Instances){
                 for (let i = 0; i < s3Instances.length; i++){
                     this.cy.add(new S3(s3Instances[i], vpcObj.region + "-" + vpc, null).getS3Object());
-                    console.log('V P C', vpc);
                     this.state.nodes[s3Instances[i]] = [s3Instances[i], "S3", vpcObj.region, vpc];
 
+                }
+            }
+            let lambdaInstances = vpcObj.Lambda;
+            if(lambdaInstances){
+                for(let func in lambdaInstances){
+                    this.cy.add(new Lambda(lambdaInstances[func], vpcObj.region + '-' + vpc).getLambdaObject());
+                    this.state.nodes[lambdaInstances[func].FunctionName] = [lambdaInstances[func].FunctionName, 'Lambda', lambdaInstances[func].Region, vpc];
                 }
             }
         }

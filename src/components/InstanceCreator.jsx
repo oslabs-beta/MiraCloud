@@ -50,7 +50,7 @@ class InstanceCreator extends Component {
 		super(props);
 		this.state = {
 			value: "select",
-			sg: "mira-" + String( Math.floor(Math.random() * 2000)),
+			sg: "mira-" + String( Math.floor(Math.random() * 20000)),
 			inputRegion: null
 		};
 		this.changeRegion = this.changeRegion.bind(this);
@@ -66,9 +66,7 @@ class InstanceCreator extends Component {
 	
 	change(event) {
 		this.setState({ value: event.target.value });
-		console.log("INPUTREGION=>>",this.state.inputRegion)
-    };
-
+	}
 	handleSubmit() {
 		if (this.props.selectedRegion.value === "all" || this.state.inputRegion !== null) AWS.config.update({region: inAllRegions[this.state.inputRegion]})
 		else AWS.config.update({ region: this.props.selectedRegion.value }); //updates arguments region, maxRetries, logger
@@ -98,7 +96,7 @@ class InstanceCreator extends Component {
 			alert("Please select Instance Type!");
 		};
 
-		if (this.state.inputRegion === "select" ||  this.state.inputRegion === null) {
+		if ((this.state.inputRegion === "select" || this.state.inputRegion === null) && this.props.selectedRegion.value === "all") {
 			alert("Please select Region!");
 		};
 
@@ -119,7 +117,7 @@ class InstanceCreator extends Component {
 
 			// Create the instance
 			let params = {
-				ImageId: imageId[AWS.config.region], // us-west-1 Amazon Linux AMI 2017.03.0 (HVM), SSD Volume Type
+				ImageId: imageId[AWS.config.region], 
 				InstanceType: 't2.micro',
 				MinCount: 1,
 				MaxCount: 1,
@@ -165,22 +163,28 @@ class InstanceCreator extends Component {
 				.catch(err => alert(err))
 			}
 		}
-		this.setState({sg:"mira-" + String( Math.floor(Math.random() * 2000))})
+		this.setState({sg:"mira-" + String( Math.floor(Math.random() * 20000))})
 		event.preventDefault();
 	}; 
 	// stayable two strings
   deleteInstance() {
     let instanceId = this.source.value;
     let activeNode = this.props.activeNode;
-    // console.log('instanceid', `${instanceId}`);
-    // console.log(this.type.value);
     function checkSG(){return new Promise((resolve, reject)=>{
         let forceErr = false;
         if(activeNode.MySecurityGroups){
           for(let i = 0; i < Object.keys(activeNode.MySecurityGroups).length; i++){
-            if(activeNode.MySecurityGroups[i].IpPermissions.length > 0 || activeNode.MySecurityGroups[i].IpPermissionsEgress.length > 1){
-              forceErr = true;
-            }
+			  let groupStr = activeNode.MySecurityGroups[i].GroupName;
+			if(groupStr.substring(0,4)!=='mira'){ 
+				if(activeNode.MySecurityGroups[i].IpPermissions.length > 1 || activeNode.MySecurityGroups[i].IpPermissionsEgress.length > 1){
+				forceErr = true;
+				}
+			}
+			else{
+				if(activeNode.MySecurityGroups[i].IpPermissions.length > 0 || activeNode.MySecurityGroups[i].IpPermissionsEgress.length > 1){
+					forceErr = true;
+					}
+			}
           }
         }
         if(forceErr) reject('Delete security group rules first');
@@ -194,7 +198,7 @@ class InstanceCreator extends Component {
       }
       ec2.deleteSecurityGroup(paramsSG, function(err, data) {
         if (err){
-          reject({'error message': err}); 
+          reject('Delete again to make sure you delete the SG associated with this instance'); 
         } // an error occurred
         else resolve(data);          // successful response
       });
@@ -206,7 +210,6 @@ class InstanceCreator extends Component {
 	let regionArr = nodeRegion.split('');
 	regionArr.pop();
 	let regionStr = regionArr.join('');
-      // console.log('ec2')
     let params = {
       InstanceIds: [`${instanceId}`],
     }
@@ -217,20 +220,28 @@ class InstanceCreator extends Component {
         if (err){
           reject({'error message': err});
         } // an error occurred
-        else{
-          console.log(data);  
+        else{ 
           resolve(); 
         }        // successful response
       });
       })
     };
     checkSG()
-    .then(()=>{deleteEC2()})
-    .then(()=>{deleteSG(regionStr, activeNode.SecurityGroups[0].GroupId)})
-    .then((data)=>{
-      console.log(data);
-      this.props.onRequestClose();
-    })
+	.then(()=>{
+		deleteEC2()
+		.then(()=>{
+			deleteSG(regionStr, activeNode.SecurityGroups[0].GroupId)
+			})
+	})
+	.then((data)=>{
+		this.props.onRequestClose();
+	  })
+	.catch(function(err){
+		alert(err);
+	})
+    // .then((data)=>{
+    //   this.props.onRequestClose();
+    // })
     .catch(function(err){
       alert(err);
     });
@@ -240,7 +251,6 @@ class InstanceCreator extends Component {
 	let regionArr = nodeRegion.split('');
 	regionArr.pop();
 	let regionStr = regionArr.join('');
-    console.log('rds');
       let params = {
         DBInstanceIdentifier: `${instanceId}`,
         SkipFinalSnapshot: true
@@ -249,11 +259,9 @@ class InstanceCreator extends Component {
       function deleteRDS(){ return new Promise((resolve, reject)=>{
         rds.deleteDBInstance(params, function(err, data) {
           if (err){
-            console.log(err, err.stack);
             reject({'error message': err});
           } // an error occurred
           else{
-            console.log(data); 
             resolve();
           }          // successful response
         });
@@ -267,18 +275,13 @@ class InstanceCreator extends Component {
           this.props.onRequestClose();
       })
        .catch(function(err) {
-		   console.log('error here:', err);
         alert(err);
       });
-    }
-    else if(this.type.value === 'S3'){
-      console.log('s3');
     }
   }
 
 
   render(){
-	  console.log("A[OFNAE[ORNF[AERONF[ERNF[OREN",AWS.config.region)
 	  let imgOptions = [];
 	  for(let key in inAllRegions){
 		  imgOptions.push(<option value={key}>{inAllRegions[key]}</option>)
