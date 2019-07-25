@@ -297,7 +297,7 @@ class InstanceCreator extends Component {
         </select>
 		<br />
 		{this.state.value === "EC2" && 
-			<div>
+			<div id='bucket_S3'>
 		        <p id='region_image'>Region Image Id:</p>	
 				{/* if specific region haven't selected will give dropdown with image ids */}
 			  {this.props.selectedRegion.value === "all" ?
@@ -311,8 +311,8 @@ class InstanceCreator extends Component {
 			}
 		  { this.state.value === "S3" &&
 			<div>
-				<p>S3 Bucket Name:</p>
-				<input type="text" placeholder="Bucket name" ref={input => (this.s3Name = input)} /> 
+				<div id='bucket_name_S3'>S3 Bucket Name:</div>
+				<input id='s3_bucket_name' type="text" placeholder="Bucket name" ref={input => (this.s3Name = input)} /> 
 			</div>
 		  }
 		  <br />
@@ -320,13 +320,13 @@ class InstanceCreator extends Component {
 	  </form>];
 	
 
-let displayDelete = [<div><div id='select-node'>Selected Node:</div>
-  <select id="instance" ref={input =>(this.type = input)}>
+let displayDelete = [<div id='delete_button'><div id='select-node'>Selected Node:</div>
+  <select id="node_drop" ref={input =>(this.type = input)}>
       <option value="EC2">EC2</option>
       <option value="RDS">RDS</option>
   </select>
-  <input ref={input => (this.source = input)} defaultValue={this.props.activeNode.InstanceId ? this.props.activeNode.InstanceId : this.props.activeNode.DBInstanceIdentifier}/>
-  <button id='deleteButton' onClick={(e)=>{this.deleteInstance()}}>Delete</button>
+  <input id='input_node' ref={input => (this.source = input)} defaultValue={this.props.activeNode.InstanceId ? this.props.activeNode.InstanceId : this.props.activeNode.DBInstanceIdentifier}/>
+  <button id='deleteButton' onClick={(e)=>{this.deleteInstance()}}>Delete Instance</button>
   </div>]
 return (
 	<div id="InstanceModal">
