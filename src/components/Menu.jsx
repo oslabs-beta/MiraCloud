@@ -118,7 +118,7 @@ class Menu extends Component {
             </Modal>
           </div>
           <div id='instanceButton'>
-            <button id='createInstance' onClick={(e)=>{this.openModal('create')}}><img id="launch" src="../src/assets/add.png"/>Launch EC2 Instance</button>
+            <button id='createInstance' onClick={(e)=>{this.openModal('create')}}><img id="launch" src="../src/assets/add.png"/>Launch Instance</button>
             <button id='deleteInstance' onClick={(e)=>{this.openModal('delete')}}><img id="delete" src="../src/assets/delete.png"/>Delete Instance</button>  
           </div>
         </div>
