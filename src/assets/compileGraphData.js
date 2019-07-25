@@ -161,8 +161,6 @@ class compileGraphData {
     }
 
     compileS3Data(currentBucketName, region, currS3DataObject){
-        console.log('CURRENT BUCKET NAME', currentBucketName);
-        console.log('current s3 logic', currS3DataObject)
         for (let vpc in this.regionState){
             if (this.regionState[vpc].region === options[region]){
                 if(this.regionState[vpc]['S3']){
@@ -177,7 +175,35 @@ class compileGraphData {
                 S3Data[currentBucketName] = currS3DataObject;  
             }  
         }
-        console.log('S3 IN FILE COMPILEGRAPHDATA', this.regionState);
+    }
+
+    compileLambdaData(data, region){
+        return new Promise((resolve, reject) => {
+           for(let key in data){
+               let functionArr = data[key];
+               for(let i = 0; i < functionArr.length; i++){
+                   if(functionArr[i].VpcConfig){ 
+                    let lambdaVpc = functionArr[i].VpcConfig.VpcId;
+                    if((!this.regionState[lambdaVpc])) this.regionState[lambdaVpc] = {};
+                    else if(!this.regionState[lambdaVpc]['Lambda']) this.regionState[lambdaVpc]['Lambda'] = {}
+                    this.regionState[lambdaVpc]['Lambda'][functionArr[i].FunctionName] = functionArr[i];
+                   }
+                   else{
+                     for(let VPC in this.regionState){
+                         for(let az in this.regionState[VPC]){
+                             let azStr = az.slice(0, az.length-1);
+                             if(azStr === region){
+                                 if(!this.regionState[VPC]['Lambda'])this.regionState[VPC]['Lambda'] = {};
+                                 this.regionState[VPC]['Lambda'][functionArr[i].FunctionName] = functionArr[i];
+                                 this.regionState[VPC]['Lambda'][functionArr[i].FunctionName].Region = region;
+                             }
+                         }
+                     }  
+                   }
+               }
+           }
+        resolve();
+        })
     }
 
     // createEdges() {
@@ -208,7 +234,6 @@ class compileGraphData {
          }      
          this.edgeTable[id].add(sg);
        }
-       console.log("the edge tables",this.edgeTable) 
        return this.edgeTable;
     }
 

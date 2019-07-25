@@ -38,7 +38,6 @@ export const getAWSInstancesError = err => ({
 //which other SG they are connected to through in-bound and out-bound
 
 export const getAWSInstances = (region, key1, key2) => {
-  console.log('keys', key1, key2);
   //sdk config to send in the region
   AWS.config.update({
     region,  // since we figure out we get info for this region
@@ -148,7 +147,6 @@ export const getAWSInstances = (region, key1, key2) => {
           console.log('Error', err.stack);
           reject();
         } else {
-          console.log('EC2 data from SDK', data);
           // data is formatted differently from RDS, needs an extra layer of iteration
           
           for (let i = 0; i < data.Reservations.length; i++) {
@@ -200,6 +198,8 @@ export const getAWSInstances = (region, key1, key2) => {
         }
       });
     })));
+
+    //get S3 data
     apiPromiseArray.push( new Promise((mainResolve, mainReject) => {
       axios({
         method: 'post',
@@ -297,7 +297,7 @@ export const getAWSInstances = (region, key1, key2) => {
                   let regionOfBucket = resultObjFromQuery.data.data.aws.s3.get_region_s3.LocationConstraint;
                   // compiling it all into the data
   
-                  if ( region === regionOfBucket) {
+                  if (region === regionOfBucket) {
                     for (let theOnlyVPC in regionState) {
                       if (regionState[theOnlyVPC]['S3']){
                         regionState[theOnlyVPC]['S3'].push(currBucketName);
@@ -320,35 +320,54 @@ export const getAWSInstances = (region, key1, key2) => {
             Promise.all(inPromiseArr).then(() => {
               mainResolve();
             })
-          }).catch((err) => console.log('show me the err', err))
+          }).catch((err) => console.log('error: ', err))
       }));
 
-    // once all the promise's are resolved, dispatch the data to the reducer
-    Promise.all(apiPromiseArray).then((values) => {
-      console.log('da region state in single region stuff',regionState)
+      //get Lambda data in a specific region
+      function getLambdas(){ return new Promise((resolve, reject)=>{
+        let lambda = new AWS.Lambda();
+        lambda.listFunctions(function(err, data){
+          if(err) reject(err);
+          else{
+            for(let i = 0; i < data.Functions.length; i++){
+              for(let key in regionState){
+                if(!regionState[key]['Lambda'])regionState[key]['Lambda'] = {};
+                regionState[key]['Lambda'][data.Functions[i].FunctionName] = data.Functions[i]
+              }
+            }
+            resolve();
+          }
+        })
+      })}
 
-      const edgeTable = {};
-      for (let i = 0; i < sgRelationships.length; i++) {
-        sgNodeCorrelations[sgRelationships[i][0]].forEach((val1, val2, set) => {
-          sgNodeCorrelations[sgRelationships[i][1]].forEach((value1, value2, set2) => {
-            if (!edgeTable.hasOwnProperty(val1)) edgeTable[val1] = new Set();
-            edgeTable[val1].add(value1);
+    // once all the promise's are resolved, dispatch the data to the reducer
+    Promise.all(apiPromiseArray)
+    .then(()=>{
+      getLambdas()
+      .then((values) => {
+        const edgeTable = {};
+        for (let i = 0; i < sgRelationships.length; i++) {
+          sgNodeCorrelations[sgRelationships[i][0]].forEach((val1, val2, set) => {
+            sgNodeCorrelations[sgRelationships[i][1]].forEach((value1, value2, set2) => {
+              if (!edgeTable.hasOwnProperty(val1)) edgeTable[val1] = new Set();
+              edgeTable[val1].add(value1);
+            });
           });
+        }
+        //
+        dispatch({
+          type: actionTypes.GET_AWS_INSTANCES,
+          payload: {
+            regionState,
+            currentRegion: region,
+            edgeTable,
+            // sgNodeCorrelations: sgNodeCorrelations,
+            // sgRelationships: sgRelationships
+          },
         });
-      }
-      //
-      dispatch({
-        type: actionTypes.GET_AWS_INSTANCES,
-        payload: {
-          regionState,
-          currentRegion: region,
-          edgeTable,
-          // sgNodeCorrelations: sgNodeCorrelations,
-          // sgRelationships: sgRelationships
-        },
+        dispatch(getAWSInstancesFinished());
       });
-      dispatch(getAWSInstancesFinished());
-    });
+    })
   };
 };
 
@@ -543,6 +562,56 @@ export const getAllRegions = (publicKey, privateKey) => {
                   ...GetBucketLocationData
                 }
             }
+            lambda {
+              us_west_1_lambda: listFunctions(config:{region: "us-west-1"}){
+                ...listallfunctions
+              }
+              us_west_2_lambda: listFunctions(config:{region: "us-west-2"}){
+                ...listallfunctions
+              }
+              us_east_1_lambda: listFunctions(config:{region: "us-east-1"}){
+                ...listallfunctions
+              }
+              us_east_2_lambda: listFunctions(config:{region: "us-east-2"}){
+                ...listallfunctions
+              }
+              ap_south_1_lambda: listFunctions(config:{region: "ap-south-1"}){
+                ...listallfunctions
+              }
+              ap_northeast_1_lambda: listFunctions(config:{region: "ap-northeast-1"}){
+                ...listallfunctions
+              }
+              ap_northeast_2_lambda: listFunctions(config:{region: "ap-northeast-2"}){
+                ...listallfunctions
+              }
+              ap_southeast_1_lambda: listFunctions(config:{region: "ap-southeast-1"}){
+                ...listallfunctions
+              }
+              ap_southeast_2_lambda: listFunctions(config:{region: "ap-southeast-2"}){
+                ...listallfunctions
+              }
+              ca_central_1_lambda: listFunctions(config:{region: "ca-central-1"}){
+                ...listallfunctions
+              }
+              eu_central_1_lambda: listFunctions(config:{region: "eu-central-1"}){
+                ...listallfunctions
+              }
+              eu_west_1_lambda: listFunctions(config:{region: "eu-west-1"}){
+                ...listallfunctions
+              }
+              eu_west_2_lambda: listFunctions(config:{region: "eu-west-2"}){
+                ...listallfunctions
+              }
+              eu_west_3_lambda: listFunctions(config:{region: "eu-west-3"}){
+                ...listallfunctions
+              }
+              eu_north_1_lambda: listFunctions(config:{region: "eu-north-1"}){
+                ...listallfunctions
+              }
+              sa_east_1_lambda: listFunctions(config:{region: "sa-east-1"}){
+                ...listallfunctions
+              }
+            }
           } 
         }    
              
@@ -586,13 +655,34 @@ export const getAllRegions = (publicKey, privateKey) => {
                 Name
                 CreationDate
               }
-            }  
+            } 
+            
+            fragment listallfunctions on AwsLambdaListFunctionsOutput{
+              Functions {
+                FunctionName
+                FunctionArn
+                Role
+                CodeSize
+                Description
+                Timeout
+                MemorySize
+                LastModified
+                Version
+                VpcConfig {
+                  VpcId
+                  SubnetIds
+                  SecurityGroupIds
+                }
+                TracingConfig{
+                  Mode
+                }
+              }
+         }
           
         
         `
       }
     }).then((result) => {
-      console.log('This is the result: ', result);
       const aws = result.data.data.aws;
       let graphData = new compileGraphData();
       let allRegionsPromisesArray = []
@@ -601,14 +691,12 @@ export const getAllRegions = (publicKey, privateKey) => {
       const awsEC2 = aws.ec2;
       const awsRDS = aws.rds;
       const awsS3 = aws.s3;
-      console.log('s3', awsS3);
-      console.log(awsEC2, awsRDS);
+      const lambda = aws.lambda;
       // recreated this with two for loops, since we have two new objects
 
       // EC2
       for (let regions in awsEC2) {
         const regionArray = regions.split("_")
-        console.log('array of region', regionArray, 'region before split', regions);
         const regionString = regionArray[0] + "-" + regionArray[1] + "-" + regionArray[2];
         // inside this Promise maker, changed the obj(awsEC2), and removed the method it's looking for (.describeInstances)
         // this is because I restructored the object we received, you don't need to look for the describeInstance, awsECs[regions] is the describeInstance
@@ -723,14 +811,24 @@ export const getAllRegions = (publicKey, privateKey) => {
         }));
       }
 
+      //lambda
+      for (let regions in lambda) {
+        const regionArray = regions.split("_")
+        const regionString = regionArray[0] + "-" + regionArray[1] + "-" + regionArray[2];
+        allRegionsPromisesArray.push(new Promise((resolve, reject) => {
+          graphData.compileLambdaData(lambda[regions], regionString)
+          .then(() => resolve())
+          .catch((err)=> reject(err));
+        }));
+      }     
+        
+
       Promise.all(getBucketRegion).then(() => {
         Promise.all(allRegionsPromisesArray).then(() => {
           graphData.createEdges();
           const edgeTable = graphData.getEdgesData();
           
-          console.log('Heres the graph data for regions: ', edgeTable);
           const regionState = graphData.getRegionData();
-          console.log('REGION STATEEEEE', regionState);
           dispatch(getAWSInstancesFinished());
           dispatch({
             type: actionTypes.GET_AWS_INSTANCES,
