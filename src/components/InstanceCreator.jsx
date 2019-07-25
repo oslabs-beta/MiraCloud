@@ -157,7 +157,7 @@ class InstanceCreator extends Component {
 				.then(() => launchWithKeyPair(this.keyPair.value))
 				.then(data => ipcRenderer.sendSync('createKeyPair', data))
 				.then(() => createEC2Instance())
-				.then(() => alert(`EC2 Instance Successfully launched in ${AWS.config.region}.File with Key Pair credentials has been downloaded to your "Download" folder. Please refresh page.`))
+				.then(() => alert(`EC2 Instance Successfully launched in ${AWS.config.region}.File with Key Pair credentials has been downloaded to your "Downloads" folder. Please refresh page.`))
 				.then(() => delete params["KeyName"])
 				.then(() => this.props.onRequestClose())
 				.catch(err => alert(err))
