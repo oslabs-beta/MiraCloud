@@ -75,7 +75,7 @@ class InstanceCreator extends Component {
 		let sg = this.state.sg;
 		if (this.state.value === "S3") {
 			function createBucket(name){
-				if(!name) {alert("Add bucket name") ;return}
+				if(!name) {alert("Add bucket name")}
 				const params = { Bucket: name };		
 				return new Promise((resolve, reject) => {
 					s3.createBucket(params, function(err, data) {
