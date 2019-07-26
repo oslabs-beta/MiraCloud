@@ -86,7 +86,7 @@ class InstanceCreator extends Component {
 			};
 			createBucket(this.s3Name.value)
 			.then( () => alert(`S3 bucket "${this.s3Name.value}" has been created`))
-			.catch(err => alert(`${this.s3.value} is already exist.Please try an other name.`))
+			.catch(err => alert(`${this.s3.value} already exists. Please try an other name.`))
 			
 			event.preventDefault();
 		};
@@ -157,7 +157,7 @@ class InstanceCreator extends Component {
 				.then(() => launchWithKeyPair(this.keyPair.value))
 				.then(data => ipcRenderer.sendSync('createKeyPair', data))
 				.then(() => createEC2Instance())
-				.then(() => alert(`EC2 Instance Successfully launched in ${AWS.config.region}.File with Key Pair credentials has been downloaded to your "Download" folder. Please refresh page.`))
+				.then(() => alert(`EC2 Instance Successfully launched in ${AWS.config.region}.File with Key Pair credentials has been downloaded to your "Downloads" folder. Please refresh page.`))
 				.then(() => delete params["KeyName"])
 				.then(() => this.props.onRequestClose())
 				.catch(err => alert(err))
@@ -287,13 +287,17 @@ class InstanceCreator extends Component {
 		  imgOptions.push(<option value={key}>{inAllRegions[key]}</option>)
 	  }
 	  imgOptions.unshift(<option value="select">Select</option>)
-
+	  let s3Options = [];
+	  s3Options.push(<option value="select">Select Instance</option>);
+	  s3Options.push(<option value="EC2">EC2</option>);
+	  if(this.props.selectedRegion.value !== "all"){
+		s3Options.push(<option value="S3">S3</option>);
+	  }
+	
   	let displayCreate = [<form>
         <div id='create_instance'>Create New Instances</div>
         <select id="instance" ref={input =>( this.instanceType = input)} onChange={this.change} value={this.state.value}>
-          <option value="select">Select Instance</option>
-          <option value="EC2">EC2</option>
-          <option value="S3">S3</option>
+          {s3Options}
         </select>
 		<br />
 		{this.state.value === "EC2" && 

@@ -6,6 +6,7 @@ body{
   font-family: $title-font;
   background-color: $bg-color;
 }
+
 #app{
   background-color: $bg-color;
 }
@@ -108,12 +109,12 @@ h1, h2, h3, h4{
 
 #node_drop{
   height: 6vh;
-  width: 5vw;
-  margin: 20px auto 10px 80px;
+  width: 12vw;
+  margin: 20px auto 10px 70px;
 }
 
 #select-node{
-  margin: 10px auto 10px 60px;
+  margin: 10px auto 10px 80px;
 }
 
 #select-img{
@@ -136,13 +137,15 @@ h1, h2, h3, h4{
 
 #deleteButton{
   height: 4vh;
-  /* margin-left: 10px; */
   background: #d4c4e2;
-  color: black;
+  /* color: black; */
   font-size: 12px;
-  /* font-weight: bold; */
+  width: 60%;
+  height: 5vh;
+  font-size: .8em;
+  border-radius: 6px;
+  margin: 10px auto 10px 53px;
   border-radius: 5px;
-  /* border: 2px solid #d4c4e2; */
 }
 
 #welcome_card{
@@ -323,7 +326,7 @@ h1, h2, h3, h4{
 }
 
 #input_node{
-  margin: 10px auto 10px 20px;
+  margin: 10px auto 10px 60px;
   width: 14vw;
   height: 3vh;
 }
@@ -409,3 +412,4 @@ h1, h2, h3, h4{
   border-bottom: 1px solid white;
   font-family: 'Montserrat', sans-serif;
 }
+
