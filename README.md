@@ -1,24 +1,22 @@
 <!-- ![Alt text](/src/assets/mira3.png?raw=true) -->
 <p align="center">
-  <img width="455" height="100" src="./src/assets/mira3.png?raw=true">
+  <img width="420" height="80" src="./src/assets/mira3.png?raw=true">
 </p>
 
 #
-MiraCloud is a desktop app that offers an AWS user a chance to visualize all of their services in a specific region or in all of them at once. The user-friendly interface allows the user to <b>launch</b>, <b>delete</b>, <b>run</b> and <b>stop</b> an instance of services like EC2, RDS and S3 buckets. It also <b>creates and deletes connections between security groups</b> of those instances. The login interface securely handles the user's IAM keys by saving into a hidden folder and deleting it upon logout.
-
-
-<div style="margin: 0 auto; width: 720px;"><img src ="./src/assets/miracloud_login.gif" /></div>
+MiraCloud is a desktop app that offers an AWS user a chance to visualize all of their services in a specific region or in all of them at once. The user-friendly interface allows the user to <b>launch</b>, <b>delete</b>, <b>run</b> and <b>stop</b> an instance of services like EC2, RDS and S3 buckets. It also <b>creates and deletes connections between security groups</b> of those instances. 
 
 ## Getting Started
-
-## Setup
-- [] Clone the repo.
+- [ ] Clone the repo.
 `git clone *github url` or use SSH 
-- [] Go to directory and run `npm install` to install all the dependencies.
-- [] Run `npm run build` to bundle your Electron application.
-- [] Run `npm start` to start MiraCloud.
+- [ ] Go to directory and run `npm install` to install all the dependencies
+- [ ] Run `npm run build` to bundle your Electron application
+- [ ] Run `npm start` to start MiraCloud
+
+<div style="margin: 0 auto; width: 720px"><img src ="./src/assets/miracloud_login.gif" /></div>
 
 ## Login
+The login interface securely handles the user's IAM keys by saving into a hidden folder and deleting it upon logout.
 1. Set up a new IAM user on your AWS console: Make sure you keep your aws_access_key_id and aws_secret_access_key by downloading the .csv file
 2. Give permissions to AWS IAM User. 
 	For read, write, and delete, give permission by:
@@ -51,9 +49,6 @@ Editing security groups through AWS is unclear for many users that do not regula
 
 
 <div style="margin: 0 auto; width: 720px;"><img src ="./src/assets/miracloud_securitygroup.gif" /></div>
-
-
-```
 
 ## Contributors
 [Rachel Kim](https://github.com/rayykim) | [Victoria Adnet](https://github.com/adnetv) | [Tarlan Gardashov](https://github.com/TarlanG) | [Gilbert Ramirez](https://github.com/Gillysuit)
