@@ -37,8 +37,8 @@ class Login extends Component{
           <div id="loginContainer">  
             <div id='input_keys'>
                 <div id='keys_label'><img id="keys" src="../src/assets/key2.png"></img>Please enter your keys:</div>
-                <div id='login_keys'><input type='text' id='accessKeys' placeholder='Public Key' onChange={(e)=>{this.handleChange(e.target.value, 'publicKey')}}></input></div>
-                <div id='login_keys'><input type='text' id='accessKeys' placeholder='Secret Key' onChange={(e)=>{this.handleChange(e.target.value, 'secretKey')}}></input></div>
+                <div id='login_keys'><input type='type' id='accessKeys' placeholder='Public Key' onChange={(e)=>{this.handleChange(e.target.value, 'publicKey')}}></input></div>
+                <div id='login_keys'><input type='password' id='accessKeys' placeholder='Secret Key' onChange={(e)=>{this.handleChange(e.target.value, 'secretKey')}}></input></div>
                 <button id='login_button' onClick={(e)=>{this.handleSubmit(this.state.publicKey, this.state.secretKey)}}>Login</button>
             </div>
           </div>
