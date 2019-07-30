@@ -50,6 +50,11 @@ Editing security groups through AWS is unclear for many users that do not regula
 
 <div style="margin: 0 auto; width: 720px;"><img src ="./src/assets/miracloud_securitygroup.gif" /></div>
 
+## Launch and delete instances
+By clicking on the launch button, a modal will prompt the user to choose which type of instance they want to create. If in the all-regions display, the app will show the list of default images available for the free tier by region. If the user is looking into a specific region, the modal also displays the free-tier image name, but will allow the user to change and input an image of their own. The user can also add a key-pair to their instance if they wish to set an SSH key to access the instance. The pem file with the key will be saved to their download folder.
+
+The delete button requires the user to click on the instance they wish to delete. This will prompt a modal with the id of the instance. If the instance's security group has any inbound/outbound rules other than the default ones, the delete won't be succesful and the app will request the user to clear the connections before deleting the instance.
+
 ## Contributors
 [Rachel Kim](https://github.com/rayykim) | [Victoria Adnet](https://github.com/adnetv) | [Tarlan Gardashov](https://github.com/TarlanG) | [Gilbert Ramirez](https://github.com/Gillysuit)
 
