@@ -4,7 +4,7 @@
 </p>
 
 #
-MiraCloud is a desktop app that offers an AWS user a chance to visualize all of their services in a specific region or in all of them at once. The user-friendly interface allows the user to launch, delete, run and stop an instance of services like EC2, RDS and S3 buckets. It also creates and deletes connections between security groups of those instances. 
+MiraCloud is a Beta desktop app that offers an AWS user a chance to visualize all of their services in a specific region or in all of them at once. The user-friendly interface allows the user to launch, delete, run and stop an instance of services like EC2, RDS and S3 buckets. It also creates and deletes connections between security groups of those instances. 
 
 ## Getting Started
 - [ ] Clone the repo.
@@ -57,5 +57,3 @@ The delete button requires the user to click on the instance they wish to delete
 
 ## Contributors
 [Rachel Kim](https://github.com/rayykim) | [Victoria Adnet](https://github.com/adnetv) | [Tarlan Gardashov](https://github.com/TarlanG) | [Gilbert Ramirez](https://github.com/Gillysuit)
-
-
